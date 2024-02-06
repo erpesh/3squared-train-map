@@ -80,7 +80,7 @@ const MyMap = ({ onTrainSelect }) => {
         onTrainSelect(train);
     };
 
-    if (!trains || trains.length === 0) return <div>Error</div>
+   // if (!trains || trains.length === 0) return <div>Error</div>
 
     return (
         <MapContainer center={[54, -0.5]} zoom={6} style={{ height: '100vh', background: 'ghostwhite' }} whenCreated={setMap}>
