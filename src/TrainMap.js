@@ -2,22 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
+import {apiRequest} from "./api";
 
-function apiRequest(endpoint) {
-    console.log(`https://traindata-stag-api.railsmart.io/api${endpoint}`)
-    return fetch(`https://traindata-stag-api.railsmart.io/api${endpoint}`, {
-            headers: {
-                'X-ApiVersion': 1,
-                'X-ApiKey': process.env.REACT_APP_API_KEY
-            }
-        }
-    );
-}
-
-const MyMap = ({ onTrainSelect }) => {
+const MyMap = ({ onTrainSelect, selectedTrain }) => {
     const [map, setMap] = useState(null);
     const [routeLine, setRouteLine] = useState(null);
-    const [trains, setTrains] = useState([]);
 
     const trainIcon = new Icon({
         iconUrl:
@@ -25,43 +14,80 @@ const MyMap = ({ onTrainSelect }) => {
         iconSize: [30, 30],
     });
 
-    useEffect(() => {
-        // Fetch train data from the API
-        fetchTrainData();
-    }, []);
-
-    const fetchTrainData = async () => {
-        try {
-            let today = new Date();
-
-            let year = today.getFullYear();
-            let month = String(today.getMonth() + 1).padStart(2, '0');
-            let day = String(today.getDate()).padStart(2, '0');
-
-            let startDate = `${year}-${month}-${day}T00:00:00`;
-            let endDate = `${year}-${month}-${day}T23:59:59`;
-
-            const trainResponse = await apiRequest(`/trains/tiploc/LEEDS,NEWHVTJ,CAMBDGE,CREWEMD,GTWK,WLSDEUT,HLWY236,LOWFRMT,WLSDRMT,LINCLNC,GLGC,CARLILE,MOSEUPY,KNGX,STAFFRD/${startDate}/${endDate}`);
-            const trainData = await trainResponse.json();
-            const filteredTrainData = trainData
-                .filter(item => item["lastReportedType"] === "DEPARTURE" ||
-                    item["lastReportedType"] === "ARRIVAL" || item["lastReportedType"] === "DESTINATION")
-            console.log(filteredTrainData)
-            setTrains([]);
-        } catch (error) {
-            console.error('Error fetching train data:', error);
-        }
-    };
+    // useEffect(() => {
+    //     // Fetch train data from the API
+    //     fetchTrainData();
+    // }, []);
+    //
+    // const fetchTrainData = async () => {
+    //     try {
+    //         let today = new Date();
+    //
+    //         let year = today.getFullYear();
+    //         let month = String(today.getMonth() + 1).padStart(2, '0');
+    //         let day = String(today.getDate()).padStart(2, '0');
+    //
+    //         let startDate = `${year}-${month}-${day}T00:00:00`;
+    //         let endDate = `${year}-${month}-${day}T23:59:59`;
+    //
+    //         const trainResponse = await apiRequest(`/trains/tiploc/LEEDS,NEWHVTJ,CAMBDGE,CREWEMD,GTWK,WLSDEUT,HLWY236,LOWFRMT,WLSDRMT,LINCLNC,GLGC,CARLILE,MOSEUPY,KNGX,STAFFRD/${startDate}/${endDate}`);
+    //         const trainData = await trainResponse.json();
+    //         const filteredTrainData = trainData
+    //             .filter(item => item["lastReportedType"] === "DEPARTURE" ||
+    //                 item["lastReportedType"] === "ARRIVAL" || item["lastReportedType"] === "DESTINATION")
+    //         console.log(filteredTrainData)
+    //         // const mappedTrainData = filteredTrainData.map(i => [i.activationId, i.scheduleId])
+    //         // const data = await Promise.all(filteredTrainData.map(t => fetchTrainData([t.activationId, t.scheduleId])))
+    //         // console.log(data);
+    //
+    //     } catch (error) {
+    //         console.error('Error fetching train data:', error);
+    //     }
+    // };
 
     const fetchTrainMovementData = async (activationId, scheduleId) => {
         try {
             const movementResponse = await apiRequest(`/ifmtrains/movement/${activationId}/${scheduleId}`)
             const movementData = await movementResponse.json();
+            console.log(movementData);
             displayTrainRoute(movementData);
         } catch (error) {
             console.error('Error fetching train movement data:', error);
         }
     };
+
+    useEffect(() => {
+        if (selectedTrain)
+            fetchTrainMovementData(selectedTrain.activationId, selectedTrain.scheduleId);
+    }, [selectedTrain])
+
+    // const displayTrainRoute = (movementData) => {
+    //     const movementLength = movementData.length;
+    //     const colouredRoutes = [];
+    //
+    //     for (let i = 0; i < movementLength - 1; i++) {
+    //         const movementStart = movementData[i];
+    //         const movementEnd = movementData[i + 1];
+    //         let color = 'green';
+    //
+    //         if (movementStart.variation < 0) {
+    //             color = 'red'; // Train is running late
+    //         } else if (movementStart.variation > 0) {
+    //             color = 'blue'; // Train is running early
+    //         }
+    //
+    //         const positions = [
+    //             [movementStart.latLong.latitude, movementStart.latLong.longitude],
+    //             [movementEnd.latLong.latitude, movementEnd.latLong.longitude],
+    //         ]
+    //         colouredRoutes.push({
+    //             positions,
+    //             color
+    //         })
+    //     }
+    //     console.log(colouredRoutes);
+    //     // setRouteLine(colouredRoutes);
+    // };
 
     const displayTrainRoute = (movementData) => {
         if (movementData.length > 0) {
@@ -72,6 +98,7 @@ const MyMap = ({ onTrainSelect }) => {
         }
     };
 
+
     const handleTrainClick = (train) => {
         // Fetch and display movement data for the selected train
         fetchTrainMovementData(train.activationId, train.scheduleId);
@@ -80,7 +107,8 @@ const MyMap = ({ onTrainSelect }) => {
         onTrainSelect(train);
     };
 
-    if (!trains || trains.length === 0) return <div>Error</div>
+    // if (!trains || trains.length === 0) return <div>Error</div>
+    if (!selectedTrain) return <div>Loading</div>
 
     return (
         <MapContainer center={[54, -0.5]} zoom={6} style={{ height: '100vh', background: 'ghostwhite' }} whenCreated={setMap}>
@@ -90,25 +118,25 @@ const MyMap = ({ onTrainSelect }) => {
                 attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
 
-            {trains.map((train) => (
-                <Marker
-                    key={train.trainId}
-                    position={[train.latitude, train.longitude]}
-                    icon={trainIcon}
-                    eventHandlers={{
-                        click: () => handleTrainClick(train),
-                    }}
-                >
-                    <Popup>
-                        <div>
-                            <h2>{train.trainId}</h2>
-                            <p>Origin: {train.originLocation}</p>
-                            <p>Destination: {train.destinationLocation}</p>
-                            <p>Status: {train.cancelled ? 'Cancelled' : 'On time'}</p>
-                        </div>
-                    </Popup>
-                </Marker>
-            ))}
+            {/*{trains.map((train) => (*/}
+            {/*    <Marker*/}
+            {/*        key={train.trainId}*/}
+            {/*        position={[train.latitude, train.longitude]}*/}
+            {/*        icon={trainIcon}*/}
+            {/*        eventHandlers={{*/}
+            {/*            click: () => handleTrainClick(train),*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        <Popup>*/}
+            {/*            <div>*/}
+            {/*                <h2>{train.trainId}</h2>*/}
+            {/*                <p>Origin: {train.originLocation}</p>*/}
+            {/*                <p>Destination: {train.destinationLocation}</p>*/}
+            {/*                <p>Status: {train.cancelled ? 'Cancelled' : 'On time'}</p>*/}
+            {/*            </div>*/}
+            {/*        </Popup>*/}
+            {/*    </Marker>*/}
+            {/*))}*/}
 
             {routeLine && <Polyline pathOptions={{ color: routeLine.color }} positions={routeLine.positions} />}
         </MapContainer>
