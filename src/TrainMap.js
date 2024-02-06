@@ -6,44 +6,13 @@ import {apiRequest} from "./api";
 
 const MyMap = ({ onTrainSelect, selectedTrain }) => {
     const [map, setMap] = useState(null);
-    const [routeLine, setRouteLine] = useState(null);
+    const [routeLine, setRouteLine] = useState([]);
 
     const trainIcon = new Icon({
         iconUrl:
             'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Map_icons_by_Scott_de_Jonge_-_train-station.svg/1024px-Map_icons_by_Scott_de_Jonge_-_train-station.svg.png',
         iconSize: [30, 30],
     });
-
-    // useEffect(() => {
-    //     // Fetch train data from the API
-    //     fetchTrainData();
-    // }, []);
-    //
-    // const fetchTrainData = async () => {
-    //     try {
-    //         let today = new Date();
-    //
-    //         let year = today.getFullYear();
-    //         let month = String(today.getMonth() + 1).padStart(2, '0');
-    //         let day = String(today.getDate()).padStart(2, '0');
-    //
-    //         let startDate = `${year}-${month}-${day}T00:00:00`;
-    //         let endDate = `${year}-${month}-${day}T23:59:59`;
-    //
-    //         const trainResponse = await apiRequest(`/trains/tiploc/LEEDS,NEWHVTJ,CAMBDGE,CREWEMD,GTWK,WLSDEUT,HLWY236,LOWFRMT,WLSDRMT,LINCLNC,GLGC,CARLILE,MOSEUPY,KNGX,STAFFRD/${startDate}/${endDate}`);
-    //         const trainData = await trainResponse.json();
-    //         const filteredTrainData = trainData
-    //             .filter(item => item["lastReportedType"] === "DEPARTURE" ||
-    //                 item["lastReportedType"] === "ARRIVAL" || item["lastReportedType"] === "DESTINATION")
-    //         console.log(filteredTrainData)
-    //         // const mappedTrainData = filteredTrainData.map(i => [i.activationId, i.scheduleId])
-    //         // const data = await Promise.all(filteredTrainData.map(t => fetchTrainData([t.activationId, t.scheduleId])))
-    //         // console.log(data);
-    //
-    //     } catch (error) {
-    //         console.error('Error fetching train data:', error);
-    //     }
-    // };
 
     const fetchTrainMovementData = async (activationId, scheduleId) => {
         try {
@@ -61,43 +30,34 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             fetchTrainMovementData(selectedTrain.activationId, selectedTrain.scheduleId);
     }, [selectedTrain])
 
-    // const displayTrainRoute = (movementData) => {
-    //     const movementLength = movementData.length;
-    //     const colouredRoutes = [];
-    //
-    //     for (let i = 0; i < movementLength - 1; i++) {
-    //         const movementStart = movementData[i];
-    //         const movementEnd = movementData[i + 1];
-    //         let color = 'green';
-    //
-    //         if (movementStart.variation < 0) {
-    //             color = 'red'; // Train is running late
-    //         } else if (movementStart.variation > 0) {
-    //             color = 'blue'; // Train is running early
-    //         }
-    //
-    //         const positions = [
-    //             [movementStart.latLong.latitude, movementStart.latLong.longitude],
-    //             [movementEnd.latLong.latitude, movementEnd.latLong.longitude],
-    //         ]
-    //         colouredRoutes.push({
-    //             positions,
-    //             color
-    //         })
-    //     }
-    //     console.log(colouredRoutes);
-    //     // setRouteLine(colouredRoutes);
-    // };
-
     const displayTrainRoute = (movementData) => {
         if (movementData.length > 0) {
-            setRouteLine({
-                positions: movementData.map((movement) => [movement.latLong.latitude, movement.latLong.longitude]),
-                color: 'green', // You can customize the color
-            });
+            const routeSegments = [];
+
+            for (let i = 0; i < movementData.length - 1; i++) {
+                const currentMovement = movementData[i];
+                const nextMovement = movementData[i + 1];
+
+                const plannedDeparture = new Date(currentMovement.plannedDeparture).getTime();
+                const actualDeparture = new Date(currentMovement.actualDeparture).getTime();
+                const plannedArrival = new Date(nextMovement.plannedDeparture).getTime();
+                const actualArrival = new Date(nextMovement.actualDeparture).getTime();
+
+                const delay = actualDeparture - plannedDeparture;
+                const color = delay > 0 ? '#bf212f' : delay < 0 ? '#27b376' : '#264b96'; // Red for late, green for early, blue for on time
+
+                routeSegments.push({
+                    positions: [
+                        [currentMovement.latLong.latitude, currentMovement.latLong.longitude],
+                        [nextMovement.latLong.latitude, nextMovement.latLong.longitude]
+                    ],
+                    color: color,
+                });
+            }
+
+            setRouteLine(routeSegments);
         }
     };
-
 
     const handleTrainClick = (train) => {
         // Fetch and display movement data for the selected train
@@ -138,7 +98,11 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             {/*    </Marker>*/}
             {/*))}*/}
 
-            {routeLine && <Polyline pathOptions={{ color: routeLine.color }} positions={routeLine.positions} />}
+
+            {routeLine && routeLine.map((segment, index) => (
+                <Polyline key={index} pathOptions={{ color: segment.color }} positions={segment.positions} />
+            ))}
+            {/*{routeLine && <Polyline pathOptions={{ color: routeLine.color }} positions={routeLine.positions} />}*/}
         </MapContainer>
     );
 };
