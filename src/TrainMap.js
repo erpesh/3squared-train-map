@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L, { Icon } from 'leaflet';
+import { Icon } from 'leaflet';
+
+function apiRequest(endpoint) {
+    console.log(`https://traindata-stag-api.railsmart.io/api${endpoint}`)
+    return fetch(`https://traindata-stag-api.railsmart.io/api${endpoint}`, {
+            headers: {
+                'X-ApiVersion': 1,
+                'X-ApiKey': process.env.REACT_APP_API_KEY
+            }
+        }
+    );
+}
 
 const MyMap = ({ onTrainSelect }) => {
     const [map, setMap] = useState(null);
     const [routeLine, setRouteLine] = useState(null);
-
-    const dummyStations = {
-        London: [51.509865, -0.118092],
-        Manchester: [53.483959, -2.244644],
-        Birmingham: [52.4862, -1.8904],
-        Edinburgh: [55.9533, -3.1883],
-        Cardiff: [51.4816, -3.1791],
-    };
+    const [trains, setTrains] = useState([]);
 
     const trainIcon = new Icon({
         iconUrl:
@@ -22,30 +26,52 @@ const MyMap = ({ onTrainSelect }) => {
     });
 
     useEffect(() => {
-        if (map) {
-            // Add your map setup code here
-            // For example:
-            // map.setView([54, -0.5], 6);
-            // L.tileLayer(...).addTo(map);
-        }
-    }, [map]);
+        // Fetch train data from the API
+        fetchTrainData();
+    }, []);
 
-    const displayTrainRoute = (trainId) => {
-        const train = dummyTrains.find((t) => t.id === trainId);
-        setRouteLine({
-            positions: train.route.map((station) => dummyStations[station]),
-            color: 'blue', // You can customize the color
-        });
+    const fetchTrainData = async () => {
+        try {
+            const trainResponse = await apiRequest('/trains/tiploc/LEEDS,NEWHVTJ,CAMBDGE,CREWEMD,GTWK,WLSDEUT,HLWY236,LOWFRMT,WLSDRMT,LINCLNC,GLGC,CARLILE,MOSEUPY,KNGX,STAFFRD/2024-01-30T00:00:00/2024-01-30T23:59:59');
+            const trainData = await trainResponse.json();
+            const filteredTrainData = trainData
+                .filter(item => item["lastReportedType"] === "DEPARTURE" ||
+                    item["lastReportedType"] === "ARRIVAL" || item["lastReportedType"] === "DESTINATION")
+            console.log(filteredTrainData)
+            setTrains([]);
+        } catch (error) {
+            console.error('Error fetching train data:', error);
+        }
+    };
+
+    const fetchTrainMovementData = async (activationId, scheduleId) => {
+        try {
+            const movementResponse = await apiRequest(`/ifmtrains/movement/${activationId}/${scheduleId}`)
+            const movementData = await movementResponse.json();
+            displayTrainRoute(movementData);
+        } catch (error) {
+            console.error('Error fetching train movement data:', error);
+        }
+    };
+
+    const displayTrainRoute = (movementData) => {
+        if (movementData.length > 0) {
+            setRouteLine({
+                positions: movementData.map((movement) => [movement.latLong.latitude, movement.latLong.longitude]),
+                color: 'green', // You can customize the color
+            });
+        }
+    };
+
+    const handleTrainClick = (train) => {
+        // Fetch and display movement data for the selected train
+        fetchTrainMovementData(train.activationId, train.scheduleId);
 
         // Notify parent component about train selection
         onTrainSelect(train);
     };
 
-    const dummyTrains = [
-        { id: 1, name: 'Train 1', origin: 'London', destination: 'Manchester', status: 'On time', route: ['London', 'Manchester', 'Birmingham'] },
-        { id: 2, name: 'Train 2', origin: 'Birmingham', destination: 'Edinburgh', status: 'Late', route: ['Birmingham', 'Manchester', 'Edinburgh'] },
-        { id: 3, name: 'Train 3', origin: 'Manchester', destination: 'Cardiff', status: 'Early', route: ['Manchester', 'Cardiff'] },
-    ];
+    if (!trains || trains.length === 0) return <div>Error</div>
 
     return (
         <MapContainer center={[54, -0.5]} zoom={6} style={{ height: '100vh', background: 'ghostwhite' }} whenCreated={setMap}>
@@ -55,21 +81,21 @@ const MyMap = ({ onTrainSelect }) => {
                 attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
 
-            {dummyTrains.map((train) => (
+            {trains.map((train) => (
                 <Marker
-                    key={train.id}
-                    position={dummyStations[train.origin]}
+                    key={train.trainId}
+                    position={[train.latitude, train.longitude]}
                     icon={trainIcon}
                     eventHandlers={{
-                        click: () => displayTrainRoute(train.id),
+                        click: () => handleTrainClick(train),
                     }}
                 >
                     <Popup>
                         <div>
-                            <h2>{train.name}</h2>
-                            <p>Origin: {train.origin}</p>
-                            <p>Destination: {train.destination}</p>
-                            <p>Status: {train.status}</p>
+                            <h2>{train.trainId}</h2>
+                            <p>Origin: {train.originLocation}</p>
+                            <p>Destination: {train.destinationLocation}</p>
+                            <p>Status: {train.cancelled ? 'Cancelled' : 'On time'}</p>
                         </div>
                     </Popup>
                 </Marker>
