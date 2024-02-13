@@ -7,6 +7,7 @@ import {apiRequest} from "./api";
 const MyMap = ({ onTrainSelect, selectedTrain }) => {
     const [map, setMap] = useState(null);
     const [routeLine, setRouteLine] = useState([]);
+    const [activeTrain, setActiveTrain] = useState(null);
 
     const trainIcon = new Icon({
         iconUrl:
@@ -41,7 +42,6 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
     }, [selectedTrain])
 
     const displayTrainRoute = (movementData, scheduleData) => {
-        console.log(movementData, scheduleData)
         const movementLength = movementData.length;
 
         if (movementLength > 0) {
@@ -49,7 +49,6 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             const lastMovementTiploc = lastMovement.tiploc;
             const scheduleIndex = scheduleData.findIndex(schedule => schedule.tiploc === lastMovementTiploc);
             const slicedSchedule = scheduleData.slice(scheduleIndex);
-            console.log(slicedSchedule, scheduleIndex)
 
             const routeSegments = [];
 
@@ -74,6 +73,16 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
                 });
             }
 
+            const lastRouteSegment = routeSegments[routeSegments.length - 1].positions[1];
+            console.log(lastRouteSegment);
+            setActiveTrain({
+                positions: {
+                    lat: lastRouteSegment[0],
+                    lng: lastRouteSegment[1],
+                }
+            })
+
+
             for (let i = 0; i < slicedSchedule.length - 1; i++) {
                 const currentSchedule = slicedSchedule[i];
                 const nextSchedule = slicedSchedule[i + 1];
@@ -86,7 +95,6 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
                     color: "#a2adaa",
                 });
             }
-            console.log(routeSegments);
             setRouteLine(routeSegments);
         }
     };
@@ -129,6 +137,26 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             {/*        </Popup>*/}
             {/*    </Marker>*/}
             {/*))}*/}
+
+            {activeTrain && selectedTrain && (
+                <Marker
+                    key={selectedTrain.trainId}
+                    position={activeTrain.positions}
+                    icon={trainIcon}
+                    // eventHandlers={{
+                    //     click: () => handleTrainClick(o),
+                    // }}
+                >
+                    <Popup>
+                        <div>
+                            {/*<h2>{selectedTrain.trainId}</h2>*/}
+                            {/*<p>Origin: {selectedTrain.originLocation}</p>*/}
+                            {/*<p>Destination: {selectedTrain.destinationLocation}</p>*/}
+                            {/*<p>Status: {selectedTrain.cancelled ? 'Cancelled' : 'On time'}</p>*/}
+                        </div>
+                    </Popup>
+                </Marker>
+            )}
 
 
             {routeLine && routeLine.map((segment, index) => (
