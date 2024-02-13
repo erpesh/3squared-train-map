@@ -43,7 +43,6 @@ const App = () => {
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
-            {/* Map */}
             <div style={{ flex: 1 }}>
                 <TrainMap onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
             </div>
