@@ -14,12 +14,22 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
         iconSize: [30, 30],
     });
 
+    const fetchTrainScheduleData = async (activationId, scheduleId) => {
+        try {
+            const scheduleResponse = await apiRequest(`/ifmtrains/schedule/${activationId}/${scheduleId}`)
+            const scheduleData = await scheduleResponse.json();
+            return scheduleData;
+        } catch (error) {
+            console.error('Error fetching train schedule data:', error);
+        }
+    };
+
     const fetchTrainMovementData = async (activationId, scheduleId) => {
         try {
             const movementResponse = await apiRequest(`/ifmtrains/movement/${activationId}/${scheduleId}`)
             const movementData = await movementResponse.json();
-            console.log(movementData);
-            displayTrainRoute(movementData);
+            const scheduleData = await fetchTrainScheduleData(activationId, scheduleId);
+            displayTrainRoute(movementData, scheduleData);
         } catch (error) {
             console.error('Error fetching train movement data:', error);
         }
@@ -30,8 +40,17 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             fetchTrainMovementData(selectedTrain.activationId, selectedTrain.scheduleId);
     }, [selectedTrain])
 
-    const displayTrainRoute = (movementData) => {
-        if (movementData.length > 0) {
+    const displayTrainRoute = (movementData, scheduleData) => {
+        console.log(movementData, scheduleData)
+        const movementLength = movementData.length;
+
+        if (movementLength > 0) {
+            const lastMovement = movementData[movementLength - 1];
+            const lastMovementTiploc = lastMovement.tiploc;
+            const scheduleIndex = scheduleData.findIndex(schedule => schedule.tiploc === lastMovementTiploc);
+            const slicedSchedule = scheduleData.slice(scheduleIndex);
+            console.log(slicedSchedule, scheduleIndex)
+
             const routeSegments = [];
 
             for (let i = 0; i < movementData.length - 1; i++) {
@@ -55,6 +74,19 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
                 });
             }
 
+            for (let i = 0; i < slicedSchedule.length - 1; i++) {
+                const currentSchedule = slicedSchedule[i];
+                const nextSchedule = slicedSchedule[i + 1];
+
+                routeSegments.push({
+                    positions: [
+                        [currentSchedule.latLong.latitude, currentSchedule.latLong.longitude],
+                        [nextSchedule.latLong.latitude, nextSchedule.latLong.longitude]
+                    ],
+                    color: "#a2adaa",
+                });
+            }
+            console.log(routeSegments);
             setRouteLine(routeSegments);
         }
     };

@@ -13,8 +13,8 @@
 }
 
 .train-card.selected {
-  background-color: #35b1ea;
-  border-color: #ccc;
+  /*background-color: #35b1ea;*/
+  border-color: #35b1ea;
 }
 
 .train-card h3 {
@@ -25,3 +25,46 @@
 .train-card p {
   margin: 5px 0;
 }
+
+.train-card {
+  padding: 10px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.train-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.station {
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.time {
+  font-size: 1rem;
+}
+
+.status {
+  margin-top: 5px;
+  font-weight: bolder;
+}
+
+.on-time {
+  color: #27b376;
+}
+
+.late {
+  color: #bf212f;
+}
+
+.early {
+  color: #264b96;
+}
+
+.selected {
+  background-color: #e0e0e0;
+}
+
