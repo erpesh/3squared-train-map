@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import TrainMap from './TrainMap';
+import TrainSidebar from './TrainSidebar';
 import { apiRequest } from "./api";
 
 const App = () => {
@@ -23,9 +24,9 @@ const App = () => {
             .filter(item => item["lastReportedType"] === "DEPARTURE" ||
                 item["lastReportedType"] === "ARRIVAL" || item["lastReportedType"] === "DESTINATION")
             .filter((obj, index, self) =>
-                    index === self.findIndex((t) => (
-                        t.trainId === obj.trainId
-                    ))
+                index === self.findIndex((t) => (
+                    t.trainId === obj.trainId
+                ))
             );
         console.log(filteredTrainData)
 
@@ -43,19 +44,8 @@ const App = () => {
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
-            {/* Sidebar */}
-            <div style={{ width: '20%', backgroundColor: '#f0f0f0', padding: '10px', overflowY: 'auto' }}>
-                <h2>Train Information</h2>
-                {trains.map(train => (
-                    <div key={train.trainId} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => handleTrainSelection(train)}>
-                        <h3>{train.originLocation} to {train.destinationLocation}</h3>
-                        <p>Status: {train.lastReportedType}</p>
-                        {/* Add more information about the train if needed */}
-                    </div>
-                ))}
-            </div>
-
-            {/* Map */}
+            <TrainSidebar trains={trains} selectedTrain={selectedTrain} onTrainSelect={handleTrainSelection} />
+            
             <div style={{ flex: 1 }}>
                 <TrainMap onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
             </div>
