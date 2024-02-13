@@ -43,6 +43,8 @@ const App = () => {
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
+            <TrainSidebar trains={trains} selectedTrain={selectedTrain} onTrainSelect={handleTrainSelection} />
+
             <div style={{ flex: 1 }}>
                 <TrainMap onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
             </div>
