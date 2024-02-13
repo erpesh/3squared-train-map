@@ -44,13 +44,26 @@ const App = () => {
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
             {/* Sidebar */}
-            <div style={{ width: '20%', backgroundColor: '#f0f0f0', padding: '10px', overflowY: 'auto' }}>
+            <div style={{ width: '25%', backgroundColor: '#f0f0f0', padding: '10px', overflowY: 'auto' }}>
                 <h2>Train Information</h2>
                 {trains.map(train => (
                     <div key={train.trainId} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => handleTrainSelection(train)}>
-                        <h3>{train.originLocation} to {train.destinationLocation}</h3>
-                        <p>Status: {train.lastReportedType}</p>
-                        {/* Add more information about the train if needed */}
+                        <div className="train-info">
+                            <span className="station">{train.originLocation}</span>
+                            <span className="time">{new Date(train.scheduledDeparture).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <div className="train-info">
+                            <span className="station">{train.destinationLocation}</span>
+                            <span className="time">{new Date(train.scheduledArrival).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <div className="status">
+                            {train.lastReportedType === 'ARRIVAL' && train.lastReportedDelay === 0 && <span className="on-time">On time</span>}
+                            {train.lastReportedType === 'ARRIVAL' && train.lastReportedDelay > 0 && <span className="late">Late</span>}
+                            {train.lastReportedType === 'ARRIVAL' && train.lastReportedDelay < 0 && <span className="early">Early</span>}
+                            {train.lastReportedType === 'DEPARTURE' && train.lastReportedDelay === 0 && <span className="on-time">On time</span>}
+                            {train.lastReportedType === 'DEPARTURE' && train.lastReportedDelay > 0 && <span className="late">Late</span>}
+                            {train.lastReportedType === 'DEPARTURE' && train.lastReportedDelay < 0 && <span className="early">Early</span>}
+                        </div>
                     </div>
                 ))}
             </div>
