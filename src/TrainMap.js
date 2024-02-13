@@ -15,12 +15,6 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
         iconSize: [30, 30],
     });
 
-    const stationIcon = new Icon({
-        iconUrl:
-            'https://cdn-icons-png.flaticon.com/512/1242/1242673.png',
-        iconSize: [30, 30],
-    });
-
     const fetchTrainScheduleData = async (activationId, scheduleId) => {
         try {
             const scheduleResponse = await apiRequest(`/ifmtrains/schedule/${activationId}/${scheduleId}`)
@@ -124,22 +118,25 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
                 attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
 
-            {routeLine.map((train) => (
-                <Marker
-                    key={train.trainId}
-                    position={[train.latitude, train.longitude]}
-                    icon={stationIcon}
-                >
-                    <Popup>
-                        <div>
-                            <h2>{train.trainId}</h2>
-                            <p>Origin: {train.originLocation}</p>
-                            <p>Destination: {train.destinationLocation}</p>
-                            <p>Status: {train.cancelled ? 'Cancelled' : 'On time'}</p>
-                        </div>
-                    </Popup>
-                </Marker>
-            ))}
+            {/*{trains.map((train) => (*/}
+            {/*    <Marker*/}
+            {/*        key={train.trainId}*/}
+            {/*        position={[train.latitude, train.longitude]}*/}
+            {/*        icon={trainIcon}*/}
+            {/*        eventHandlers={{*/}
+            {/*            click: () => handleTrainClick(train),*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        <Popup>*/}
+            {/*            <div>*/}
+            {/*                <h2>{train.trainId}</h2>*/}
+            {/*                <p>Origin: {train.originLocation}</p>*/}
+            {/*                <p>Destination: {train.destinationLocation}</p>*/}
+            {/*                <p>Status: {train.cancelled ? 'Cancelled' : 'On time'}</p>*/}
+            {/*            </div>*/}
+            {/*        </Popup>*/}
+            {/*    </Marker>*/}
+            {/*))}*/}
 
             {activeTrain && selectedTrain && (
                 <Marker
