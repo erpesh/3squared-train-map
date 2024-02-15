@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import TrainMap from './TrainMap';
+import Clock from './Clock';
+import Header from './Header';
 import { apiRequest } from "./api";
 
 const App = () => {
@@ -43,6 +45,7 @@ const App = () => {
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
+            <Header></Header>
             {/* Sidebar */}
             <div style={{ width: '25%', backgroundColor: '#f0f0f0', padding: '10px', overflowY: 'auto' }}>
                 <h2>Train Information</h2>
@@ -72,6 +75,8 @@ const App = () => {
             <div style={{ flex: 1 }}>
                 <TrainMap onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
             </div>
+            <Clock></Clock>
+            
         </div>
     );
 };
