@@ -1,4 +1,4 @@
-import {Marker, Popup} from "react-leaflet";
+import {Marker, Tooltip} from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import React from "react";
 import {Icon} from "leaflet";
@@ -19,12 +19,12 @@ export default function Stations({ stations }) {
                     position={station.position}
                     icon={stationIcon}
                 >
-                    <Popup>
+                    <Tooltip>
                         <div>
                             <h2>{station.tiploc}</h2>
                             <p>{station.location}</p>
                         </div>
-                    </Popup>
+                    </Tooltip>
                 </Marker>
             ))}
         </MarkerClusterGroup>

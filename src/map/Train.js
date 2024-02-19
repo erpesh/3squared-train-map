@@ -1,4 +1,4 @@
-import {Marker, Popup} from "react-leaflet";
+import {Marker, Tooltip} from "react-leaflet";
 import React from "react";
 import {Icon} from "leaflet";
 
@@ -26,14 +26,14 @@ export default function Train({ train, selectedTrain, setSelectedTrain }) {
                 },
             }}
         >
-            <Popup>
+            <Tooltip>
                 <div>
                     <h2>{train.headCode}</h2>
                     <p>Origin: {train.originLocation}</p>
                     <p>Destination: {train.destinationLocation}</p>
                     <p>Status: {train.cancelled ? 'Cancelled' : 'On time'}</p>
                 </div>
-            </Popup>
+            </Tooltip>
         </Marker>
     )
 }
