@@ -1,4 +1,34 @@
+//Component to display the list of trains and filter them based on date, location, and status
 import React, { useState } from 'react';
+
+const ExpandSideBar = ({selectedTrain}) => {
+
+    const [expanded, setExpanded] = useState(false);
+
+    const handleExpand = () => {
+        setExpanded(!expanded);
+    };
+
+    return (
+        <div>
+            <button onClick={handleExpand}>More Info</button>
+            {expanded && (
+                <div>
+                    <p>Train ID: {selectedTrain.trainId}</p>
+                    <p>Origin Location: {selectedTrain.originLocation}</p>
+                    <p>Destination Location: {selectedTrain.destinationLocation}</p>
+                    <p>Last Reported Type: {selectedTrain.lastReportedType}</p>
+                    <p>Planned Departure: {selectedTrain.plannedDeparture}</p>
+                    <p>Planned Arrival: {selectedTrain.plannedArrival}</p>
+                    <p>Actual Departure: {selectedTrain.actualDeparture}</p>
+                    <p>Actual Arrival: {selectedTrain.actualArrival}</p>
+                </div>
+            )}
+        </div>
+    );
+    
+}
+
 
 const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
     const [filters, setFilters] = useState({
@@ -16,6 +46,9 @@ const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
         setFilters({ ...filters, [filterName]: value });
     };
 
+
+
+
     const filteredTrains = trains.filter(train => {
         return (!filters.date || train.date === filters.date) &&
                (!filters.location || train.originLocation === filters.location) &&
@@ -23,9 +56,10 @@ const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
     });
 
     return (
-        <div style={{ width: '20%', backgroundColor: '#f0f0f0', padding: '10px', overflowY: 'auto' }}>
+        <div style={{ width: '20%', backgroundColor: '#AFEEEE', padding: '10px', overflowY: 'auto' }}>
             <h2>Train Information</h2>
-            {/* Date Filter */}
+
+            {/* Date Filter *
             <div>
                 <h3>Filter by Date:</h3>
                 {uniqueDates.map(date => (
@@ -33,6 +67,7 @@ const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
                 ))}
                 <button onClick={() => handleFilterChange('date', null)}>Clear Date Filter</button>
             </div>
+                */}
 
             {/* Location Filter */}
             <div>
@@ -57,6 +92,8 @@ const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
                 <div key={train.trainId} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => onTrainSelect(train)}>
                     <h3>{train.originLocation} to {train.destinationLocation}</h3>
                     <p>Status: {train.lastReportedType}</p>
+
+                    <ExpandSideBar selectedTrain={selectedTrain}/>
                     {/* Add more information about the train if needed */}
                 </div>
             ))}
