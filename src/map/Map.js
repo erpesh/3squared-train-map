@@ -30,7 +30,10 @@ const Map = ({ trains, onTrainSelect, selectedTrain }) => {
         const scheduleData = await fetchTrainScheduleData(activationId, scheduleId);
         const movementData = await fetchTrainMovementData(activationId, scheduleId);
 
-        displayTrainRoute(movementData, scheduleData);
+        // Remove schedules that don't have latLong value
+        const filteredScheduleData = scheduleData.filter(s => s.latLong);
+
+        displayTrainRoute(movementData, filteredScheduleData);
     }
 
     useEffect(() => {
