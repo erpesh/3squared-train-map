@@ -56,7 +56,7 @@ const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
     });
 
     return (
-        <div style={{ width: '20%', backgroundColor: '#AFEEEE', padding: '10px', overflowY: 'auto' }}>
+        <div style={{ width: '20%', backgroundColor: '#9fcfd3', padding: '10px', overflowY: 'auto' }}>
             <h2>Train Information</h2>
 
             {/* Date Filter *
