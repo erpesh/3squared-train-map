@@ -68,3 +68,35 @@
   background-color: #e0e0e0;
 }
 
+
+
+.Clock {
+  position: absolute;
+  z-index:1000;
+  top: 30px;
+  right: 5px;
+  font-size: 7px;
+}
+
+.header {
+  display: flex;
+  position: fixed;
+  width: 98%;
+  z-index:1000;
+  align-items: center;
+  justify-content: space-between;
+  padding:0 20px;
+  background-color: #32858b;
+  color: white;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+}
+
+.title {
+  font-size: 20px;
+  margin: 0;
+}
+

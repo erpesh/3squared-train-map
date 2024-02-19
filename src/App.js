@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import TrainMap from './TrainMap';
 import TrainSidebar from './TrainSidebar';
+import Clock from './Clock';
+import Header from './Header';
 import { apiRequest } from "./api";
 
 const App = () => {
@@ -45,11 +47,14 @@ const App = () => {
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
+            <Header></Header>
             <TrainSidebar trains={trains} selectedTrain={selectedTrain} onTrainSelect={handleTrainSelection} />
             
             <div style={{ flex: 1 }}>
                 <TrainMap onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
             </div>
+            <Clock></Clock>
+            
         </div>
     );
 };
