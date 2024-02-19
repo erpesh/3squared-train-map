@@ -82,11 +82,12 @@
   display: flex;
   position: fixed;
   width: 98%;
+  height: 4.5%;
   z-index:1000;
   align-items: center;
   justify-content: space-between;
   padding:0 20px;
-  background-color: #32858b;
+  background-color: #63cfd6;
   color: white;
 }
 
@@ -96,7 +97,7 @@
 }
 
 .title {
-  font-size: 20px;
+  font-size: 16px;
   margin: 0;
 }
 
