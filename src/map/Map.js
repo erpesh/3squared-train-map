@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import {apiRequest} from "../api";
+import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 import Stations from "./Stations";
 import Routes from "./Routes";
 import Train from "./Train";
@@ -21,41 +21,27 @@ function removeDuplicates(array, property) {
     );
 }
 
-const Map = ({ onTrainSelect, selectedTrain }) => {
+const Map = ({ trains, onTrainSelect, selectedTrain }) => {
     const [routeLine, setRouteLine] = useState([]);
     const [activeTrain, setActiveTrain] = useState(null);
     const [stations, setStations] = useState([]);
 
-    // Clean the map when new train is selected
+    const fetchAndDisplayTrainData = async (activationId, scheduleId) => {
+        const scheduleData = await fetchTrainScheduleData(activationId, scheduleId);
+        const movementData = await fetchTrainMovementData(activationId, scheduleId);
+
+        displayTrainRoute(movementData, scheduleData);
+    }
+
     useEffect(() => {
+        // Clear all markers and routes
         setRouteLine([]);
         setActiveTrain(null);
-    }, [selectedTrain])
 
-    const fetchTrainScheduleData = async (activationId, scheduleId) => {
-        try {
-            const scheduleResponse = await apiRequest(`/ifmtrains/schedule/${activationId}/${scheduleId}`)
-            const scheduleData = await scheduleResponse.json();
-            return scheduleData;
-        } catch (error) {
-            console.error('Error fetching train schedule data:', error);
+        if (selectedTrain) {
+            fetchAndDisplayTrainData(selectedTrain.activationId, selectedTrain.scheduleId);
+            // setActiveTrain(selectedTrain);
         }
-    };
-
-    const fetchTrainMovementData = async (activationId, scheduleId) => {
-        try {
-            const movementResponse = await apiRequest(`/ifmtrains/movement/${activationId}/${scheduleId}`)
-            const movementData = await movementResponse.json();
-            const scheduleData = await fetchTrainScheduleData(activationId, scheduleId);
-            displayTrainRoute(movementData, scheduleData);
-        } catch (error) {
-            console.error('Error fetching train movement data:', error);
-        }
-    };
-
-    useEffect(() => {
-        if (selectedTrain)
-            fetchTrainMovementData(selectedTrain.activationId, selectedTrain.scheduleId);
     }, [selectedTrain])
 
     const displayTrainRoute = (movementData, scheduleData) => {
@@ -133,9 +119,7 @@ const Map = ({ onTrainSelect, selectedTrain }) => {
     };
 
     // if (!trains || trains.length === 0) return <div>Error</div>
-    if (!selectedTrain) return <div>Loading</div>
-
-
+    if (!trains || trains.length === 0) return <div>Loading</div>
 
     return (
         <MapContainer center={[54, -0.5]} zoom={6} style={{ height: '100vh', background: 'ghostwhite' }}>
@@ -146,7 +130,13 @@ const Map = ({ onTrainSelect, selectedTrain }) => {
             />
 
             {stations && <Stations stations={stations}/>}
-            {activeTrain && selectedTrain && <Train train={activeTrain}/>}
+            {trains && trains.length > 0 &&
+                trains.map(train => <Train
+                    key={train.activationId}
+                    train={train}
+                    selectedTrain={selectedTrain}
+                    setSelectedTrain={onTrainSelect}
+                />)}
             {routeLine && <Routes routeLine={routeLine}/>}
         </MapContainer>
     );

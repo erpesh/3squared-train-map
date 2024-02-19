@@ -5,11 +5,12 @@ import Map from './map/Map';
 import TrainSidebar from './TrainSidebar';
 import Clock from './Clock';
 import Header from './Header';
-import { apiRequest } from "./api";
+import {apiRequest, fetchTrainMovementData} from "./api";
 
 const App = () => {
     const [selectedTrain, setSelectedTrain] = useState(null);
     const [trains, setTrains] = useState([]);
+    const [trainsWithMovement, setTrainsWithMovement] = useState([]);
 
     async function fetchTrains() {
         let today = new Date();
@@ -31,10 +32,30 @@ const App = () => {
                     t.trainId === obj.trainId
                 ))
             );
-        console.log(filteredTrainData)
 
         setTrains(filteredTrainData);
-        setSelectedTrain(filteredTrainData[0]);
+        const trainsWithMovement = await getTrainsWithMovement(filteredTrainData);
+        setTrainsWithMovement(trainsWithMovement);
+        console.log(trainsWithMovement);
+        // setSelectedTrain(filteredTrainData[0]);
+    }
+
+    async function getTrainsWithMovement(trains) {
+        const movements = await Promise.all(
+            trains.map(train => fetchTrainMovementData(train.activationId, train.scheduleId))
+        )
+
+        const trainsWithMovement = [];
+        for (let i = 0; i < trains.length; i++) {
+            const movement = movements[i];
+            const train = trains[i];
+
+            trainsWithMovement.push({
+                ...train,
+                movement: movement[movement.length - 1]
+            })
+        }
+        return trainsWithMovement;
     }
 
     useEffect(() => {
@@ -47,14 +68,20 @@ const App = () => {
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
-            <Header></Header>
-            <TrainSidebar trains={trains} selectedTrain={selectedTrain} onTrainSelect={handleTrainSelection} />
-            
+            <Header/>
+            <TrainSidebar
+                trains={trains}
+                selectedTrain={selectedTrain}
+                onTrainSelect={handleTrainSelection}
+            />
             <div style={{ flex: 1 }}>
-                <Map onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
+                <Map
+                    trains={trainsWithMovement}
+                    onTrainSelect={handleTrainSelection}
+                    selectedTrain={selectedTrain}
+                />
             </div>
-            <Clock></Clock>
-            
+            <Clock/>
         </div>
     );
 };
