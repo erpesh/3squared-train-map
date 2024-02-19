@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import TrainMap from './TrainMap';
+import Map from './map/Map';
 import TrainSidebar from './TrainSidebar';
 import Clock from './Clock';
 import Header from './Header';
@@ -51,7 +51,7 @@ const App = () => {
             <TrainSidebar trains={trains} selectedTrain={selectedTrain} onTrainSelect={handleTrainSelection} />
             
             <div style={{ flex: 1 }}>
-                <TrainMap onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
+                <Map onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
             </div>
             <Clock></Clock>
             
