@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import Map from './map/Map';
 import TrainSidebar from './TrainSidebar';
-import Clock from './Clock';
+import Refresh from './Refresh';
 import Header from './Header';
+
 import {apiRequest, fetchTrainMovementData} from "./api";
 
 const App = () => {
@@ -81,8 +82,10 @@ const App = () => {
                     selectedTrain={selectedTrain}
                 />
             </div>
-            <Clock/>
+            <Refresh/>
+        
         </div>
+        
     );
 };
 

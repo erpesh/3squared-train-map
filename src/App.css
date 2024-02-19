@@ -70,12 +70,19 @@
 
 
 
-.Clock {
+.Refresh {
   position: absolute;
   z-index:1000;
-  top: 30px;
+  top: 40px;
   right: 5px;
   font-size: 7px;
+  background: rgba(105,118,124,0.4);
+  border-radius:5%;
+
+  border: 3px solid;
+  border-color:#63cfd6;
+  text-align: center;
+  
 }
 
 .header {
