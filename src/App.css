@@ -107,3 +107,41 @@
   margin: 0;
 }
 
+.train-info-container {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.train-info-container h2 {
+  margin-top: 0;
+}
+
+.train-info-container p {
+  margin: 5px 0;
+}
+
+.arrival-info {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.arrival-info .icon {
+  margin-right: 5px;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.icon {
+  height: 16px;
+  width: 16px;
+}
+.pl-2 {
+  padding-left: 8px;
+}

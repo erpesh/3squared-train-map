@@ -14,8 +14,6 @@ const App = () => {
     const [trainsWithMovement, setTrainsWithMovement] = useState([]);
 
     async function fetchTrains(date= null) {
-
-
         let today = date ? new Date(date) : new Date();
 
         let year = today.getFullYear();
@@ -50,12 +48,22 @@ const App = () => {
         for (let i = 0; i < trains.length; i++) {
             const movement = movements[i].filter(m => m.latLong);
             const train = trains[i];
+            const actualArrival = new Date(train.actualArrival);
+            const scheduledArrival = new Date(train.scheduledArrival);
+
+            const delayInMilliseconds = actualArrival - scheduledArrival;
+            const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
+
+            const isLate = delayInMilliseconds > 0;
 
             trainsWithMovement.push({
                 ...train,
-                movement: movement[movement.length - 1]
+                movement: movement[movement.length - 1],
+                isLate,
+                delayInMinutes
             })
         }
+        console.log(trainsWithMovement);
         return trainsWithMovement;
     }
 
@@ -63,23 +71,19 @@ const App = () => {
         fetchTrains();
     }, []);
 
-    const handleTrainSelection = (train) => {
-        setSelectedTrain(train);
-    };
-
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
             <Header/>
             <TrainSidebar
                 trains={trains}
                 selectedTrain={selectedTrain}
-                onTrainSelect={handleTrainSelection}
+                onTrainSelect={setSelectedTrain}
             />
             <div style={{ flex: 1 }}>
                 <Map
                     trains={trainsWithMovement}
-                    onTrainSelect={handleTrainSelection}
                     selectedTrain={selectedTrain}
+                    setSelectedTrain={setSelectedTrain}
                 />
             </div>
             <Refresh/>
