@@ -12,6 +12,7 @@ const App = () => {
     const [selectedTrain, setSelectedTrain] = useState(null);
     const [trains, setTrains] = useState([]);
     const [trainsWithMovement, setTrainsWithMovement] = useState([]);
+    const [refresh, setRefresh] = useState(false);
 
     async function fetchTrains(date= null) {
         let today = date ? new Date(date) : new Date();
@@ -67,9 +68,11 @@ const App = () => {
         return trainsWithMovement;
     }
 
+    const refreshTrains = () => setRefresh(!refresh);
+
     useEffect(() => {
         fetchTrains();
-    }, []);
+    }, [refresh]);
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
@@ -86,8 +89,7 @@ const App = () => {
                     setSelectedTrain={setSelectedTrain}
                 />
             </div>
-            <Refresh/>
-        
+            <Refresh refreshTrains={refreshTrains}/>
         </div>
         
     );

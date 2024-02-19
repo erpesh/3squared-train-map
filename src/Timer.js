@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 
-const Timer = ( ) => {
-    const [delay, setDelay] = useState(200);
+const Timer = ({ refreshTrains }) => {
+    const defaultDelay = 200;
+    const [delay, setDelay] = useState(defaultDelay);
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -10,23 +11,20 @@ const Timer = ( ) => {
 
         if (delay === 0) {
             clearInterval(timer);
-            window.location.reload();
+            refreshTrains();
+            setDelay(defaultDelay);
         }
 
         return () => {
             clearInterval(timer);
         };
-        
+
     }, [delay]);
 
-
-
     return (
-        <>
       <span style={{fontSize: 20}}>
         {delay}
       </span>
-        </>
     );
 };
 
