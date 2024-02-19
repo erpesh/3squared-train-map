@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Tooltip, Polyline, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Icon } from 'leaflet';
 import {apiRequest} from "./api";
@@ -14,6 +14,7 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Map_icons_by_Scott_de_Jonge_-_train-station.svg/1024px-Map_icons_by_Scott_de_Jonge_-_train-station.svg.png',
         iconSize: [30, 30],
     });
+    
 
     const fetchTrainScheduleData = async (activationId, scheduleId) => {
         try {
@@ -24,6 +25,7 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             console.error('Error fetching train schedule data:', error);
         }
     };
+    
 
     const fetchTrainMovementData = async (activationId, scheduleId) => {
         try {
@@ -35,7 +37,7 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
             console.error('Error fetching train movement data:', error);
         }
     };
-
+   
     useEffect(() => {
         if (selectedTrain)
             fetchTrainMovementData(selectedTrain.activationId, selectedTrain.scheduleId);
@@ -111,32 +113,18 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
     if (!selectedTrain) return <div>Loading</div>
 
     return (
-        <MapContainer center={[54, -0.5]} zoom={6} style={{ height: '100vh', background: 'ghostwhite' }} whenCreated={setMap}>
+        <MapContainer zoomControl={false} center={[54, -0.5]} zoom={6} style={{ height: '100vh', background: 'ghostwhite' }} whenCreated={setMap}>
             <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                 url="https://api.maptiler.com/maps/basic-v2-light/256/{z}/{x}/{y}.png?key=ZUcnqk3oJsB7puuU1TIW"
                 maxZoom={20}
-                attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-            />
+                attribution= '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+                />
 
-            {/*{trains.map((train) => (*/}
-            {/*    <Marker*/}
-            {/*        key={train.trainId}*/}
-            {/*        position={[train.latitude, train.longitude]}*/}
-            {/*        icon={trainIcon}*/}
-            {/*        eventHandlers={{*/}
-            {/*            click: () => handleTrainClick(train),*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        <Popup>*/}
-            {/*            <div>*/}
-            {/*                <h2>{train.trainId}</h2>*/}
-            {/*                <p>Origin: {train.originLocation}</p>*/}
-            {/*                <p>Destination: {train.destinationLocation}</p>*/}
-            {/*                <p>Status: {train.cancelled ? 'Cancelled' : 'On time'}</p>*/}
-            {/*            </div>*/}
-            {/*        </Popup>*/}
-            {/*    </Marker>*/}
-            {/*))}*/}
+            <ZoomControl
+            zoomInTitle="Click to Zoom In"
+            zoomOutTitle="Click to Zoom Out"
+            position='bottomleft'
+            />
 
             {activeTrain && selectedTrain && (
                 <Marker
@@ -147,23 +135,25 @@ const MyMap = ({ onTrainSelect, selectedTrain }) => {
                     //     click: () => handleTrainClick(o),
                     // }}
                 >
-                    <Popup>
+                    <Tooltip>
                         <div>
-                            {/*<h2>{selectedTrain.trainId}</h2>*/}
-                            {/*<p>Origin: {selectedTrain.originLocation}</p>*/}
-                            {/*<p>Destination: {selectedTrain.destinationLocation}</p>*/}
-                            {/*<p>Status: {selectedTrain.cancelled ? 'Cancelled' : 'On time'}</p>*/}
+                            <h3>{selectedTrain.originTiploc}</h3>
+                            <p>Origin: {selectedTrain.originLocation}</p>
+                            <p>Destination: {selectedTrain.destinationLocation}</p>
+                            <p>Status: {selectedTrain.cancelled ? 'Cancelled' : 'On time'}</p>
                         </div>
-                    </Popup>
+                    </Tooltip>
                 </Marker>
+                
+    
             )}
-
 
             {routeLine && routeLine.map((segment, index) => (
                 <Polyline key={index} pathOptions={{ color: segment.color }} positions={segment.positions} />
             ))}
             {/*{routeLine && <Polyline pathOptions={{ color: routeLine.color }} positions={routeLine.positions} />}*/}
         </MapContainer>
+        
     );
 };
 
