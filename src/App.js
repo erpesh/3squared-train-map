@@ -1,6 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import TrainMap from './TrainMap';
+import TrainSidebar from './TrainSidebar';
 import Clock from './Clock';
 import Header from './Header';
 import { apiRequest } from "./api";
@@ -25,9 +27,9 @@ const App = () => {
             .filter(item => item["lastReportedType"] === "DEPARTURE" ||
                 item["lastReportedType"] === "ARRIVAL" || item["lastReportedType"] === "DESTINATION")
             .filter((obj, index, self) =>
-                    index === self.findIndex((t) => (
-                        t.trainId === obj.trainId
-                    ))
+                index === self.findIndex((t) => (
+                    t.trainId === obj.trainId
+                ))
             );
         console.log(filteredTrainData)
 
@@ -46,32 +48,8 @@ const App = () => {
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
             <Header></Header>
-            {/* Sidebar */}
-            <div style={{ width: '25%', backgroundColor: '#f0f0f0', padding: '10px', overflowY: 'auto' }}>
-                <h2>Train Information</h2>
-                {trains.map(train => (
-                    <div key={train.trainId} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => handleTrainSelection(train)}>
-                        <div className="train-info">
-                            <span className="station">{train.originLocation}</span>
-                            <span className="time">{new Date(train.scheduledDeparture).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        </div>
-                        <div className="train-info">
-                            <span className="station">{train.destinationLocation}</span>
-                            <span className="time">{new Date(train.scheduledArrival).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                        </div>
-                        <div className="status">
-                            {train.lastReportedType === 'ARRIVAL' && train.lastReportedDelay === 0 && <span className="on-time">On time</span>}
-                            {train.lastReportedType === 'ARRIVAL' && train.lastReportedDelay > 0 && <span className="late">Late</span>}
-                            {train.lastReportedType === 'ARRIVAL' && train.lastReportedDelay < 0 && <span className="early">Early</span>}
-                            {train.lastReportedType === 'DEPARTURE' && train.lastReportedDelay === 0 && <span className="on-time">On time</span>}
-                            {train.lastReportedType === 'DEPARTURE' && train.lastReportedDelay > 0 && <span className="late">Late</span>}
-                            {train.lastReportedType === 'DEPARTURE' && train.lastReportedDelay < 0 && <span className="early">Early</span>}
-                        </div>
-                    </div>
-                ))}
-            </div>
-
-            {/* Map */}
+            <TrainSidebar trains={trains} selectedTrain={selectedTrain} onTrainSelect={handleTrainSelection} />
+            
             <div style={{ flex: 1 }}>
                 <TrainMap onTrainSelect={handleTrainSelection} selectedTrain={selectedTrain} />
             </div>

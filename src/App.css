@@ -84,19 +84,19 @@
   width: 98%;
   z-index:1000;
   align-items: center;
-  justify-content: space-between; /* Adjusts to space evenly between logo and text */
+  justify-content: space-between;
   padding:0 20px;
   background-color: #32858b;
   color: white;
 }
 
 .logo {
-  width: 100px; /* Adjust the width as needed */
-  height: auto; /* Maintain aspect ratio */
+  width: 100px;
+  height: auto;
 }
 
 .title {
-  font-size: 20px; /* Adjust the font size as needed */
-  margin: 0; /* Remove default margin */
+  font-size: 20px;
+  margin: 0;
 }
 
