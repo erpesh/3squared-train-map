@@ -47,7 +47,7 @@ const App = () => {
 
         const trainsWithMovement = [];
         for (let i = 0; i < trains.length; i++) {
-            const movement = movements[i];
+            const movement = movements[i].filter(m => m.latLong);
             const train = trains[i];
 
             trainsWithMovement.push({
