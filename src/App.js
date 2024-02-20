@@ -1,5 +1,5 @@
 
-import React, {useEffect, useMemo, useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import './App.css';
 import Map from './map/Map';
 import TrainSidebar from './TrainSidebar';
@@ -7,8 +7,9 @@ import Refresh from './Refresh';
 import Header from './Header';
 import Legend from './Legend';
 
-import {apiRequest, fetchTrainMovementData} from "./api";
+import {apiRequest, fetchTrainMovementData, fetchTrainScheduleData} from "./api";
 import useFilters from "./hooks/useFilters";
+import {getStationsAndRoutes} from "./utils/mappers";
 
 const App = () => {
     const [selectedTrain, setSelectedTrain] = useState(null);
@@ -42,14 +43,27 @@ const App = () => {
         setTrainsWithMovement(trainsWithMovement);
     }
 
+    const getMovementAndSchedule = async (activationId, scheduleId) => {
+        const [movement, schedule] = await Promise.all([
+            fetchTrainMovementData(activationId, scheduleId),
+            fetchTrainScheduleData(activationId, scheduleId)
+        ])
+        return {
+            movement,
+            schedule
+        };
+    }
+
     async function getTrainsWithMovement(trains) {
-        const movements = await Promise.all(
-            trains.map(train => fetchTrainMovementData(train.activationId, train.scheduleId))
+        const data = await Promise.all(
+            trains.map(train => getMovementAndSchedule(train.activationId, train.scheduleId))
         )
 
         const trainsWithMovement = [];
         for (let i = 0; i < trains.length; i++) {
-            const movement = movements[i].filter(m => m.latLong);
+            const {movement, schedule} = data[i];
+            const {stations} = getStationsAndRoutes(movement, schedule);
+
             const train = trains[i];
             const actualArrival = new Date(train.actualArrival);
             const scheduledArrival = new Date(train.scheduledArrival);
@@ -61,6 +75,7 @@ const App = () => {
 
             trainsWithMovement.push({
                 ...train,
+                stations,
                 movement: movement[movement.length - 1],
                 isLate,
                 delayInMinutes

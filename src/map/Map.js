@@ -5,6 +5,7 @@ import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 import Stations from "./Stations";
 import Routes from "./Routes";
 import Trains from "./Trains";
+import {getStationsAndRoutes} from "../utils/mappers";
 
 export const colors = {
     onTime: "#305dbd",
@@ -12,16 +13,6 @@ export const colors = {
     late: "#bf212f",
     scheduled: "#a2adaa",
 }
-
-function removeDuplicates(array, property) {
-    return array.filter((obj, index, self) =>
-        index === self.findIndex((o) => (
-            o[property] === obj[property]
-        ))
-    );
-}
-
-//TODO: display only filtered trains on the map
 
 const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
     const [routeLine, setRouteLine] = useState([]);
@@ -48,72 +39,7 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
     }, [selectedTrain])
 
     const displayTrainRoute = (movementData, scheduleData) => {
-        const routeSegments = [];
-        const stationsList = [];
-
-        // Add first station
-        const firstSchedule = scheduleData[0];
-        stationsList.push({
-            location: firstSchedule.location,
-            tiploc: firstSchedule.tiploc,
-            position: {
-                lat: firstSchedule.latLong.latitude,
-                lng: firstSchedule.latLong.longitude,
-            }
-        })
-
-        for (let i = 0; i < scheduleData.length - 1; i++) {
-            const currentSchedule = scheduleData[i];
-            const nextSchedule = scheduleData[i + 1];
-
-            const curLatLong = currentSchedule.latLong;
-            const nextlatLong = nextSchedule.latLong;
-            if (!curLatLong || !nextlatLong)
-                continue
-
-            let color = colors.scheduled;
-            let station = currentSchedule;
-            const movementIndex = movementData.findIndex(mov => mov.tiploc === nextSchedule.tiploc);
-
-            // If movement data for nextSchedule exists
-            if (movementIndex !== -1) {
-                const movement = movementData[movementIndex];
-                const plannedDep = movement.plannedDeparture ?? movement.planned;
-                const actualDep = movement.actualDeparture ?? movement.actual;
-
-                station = movement;
-
-                // Set color to scheduled if there's no departure data
-                if (plannedDep && actualDep) {
-                    const plannedDeparture = new Date(plannedDep).getTime();
-                    const actualDeparture = new Date(actualDep).getTime();
-                    const delay = actualDeparture - plannedDeparture;
-                    color = delay > 0 ? colors.late : delay < 0 ? colors.early : colors.onTime;
-                }
-            }
-
-            // Add a route segment
-            routeSegments.push({
-                positions: [
-                    [currentSchedule.latLong.latitude, currentSchedule.latLong.longitude],
-                    [nextSchedule.latLong.latitude, nextSchedule.latLong.longitude]
-                ],
-                color: color,
-            });
-
-            // Add a station
-            stationsList.push({
-                location: station.location,
-                tiploc: station.tiploc,
-                position: {
-                    lat: station.latLong.latitude,
-                    lng: station.latLong.longitude,
-                }
-            })
-        }
-
-        // Remove duplicate stations
-        const filteredStations = removeDuplicates(stationsList, "tiploc");
+        const {stations: filteredStations, routes: routeSegments} = getStationsAndRoutes(movementData, scheduleData);
 
         setRouteLine(routeSegments);
         setStations(filteredStations);

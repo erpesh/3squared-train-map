@@ -1,5 +1,36 @@
 //Component to display the list of trains and filter them based on date, location, and status
+import { Train } from 'lucide-react';
 import React, { useState } from 'react';
+
+function formatTime(dateString) {
+    const date = new Date(dateString);
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let seconds = date.getSeconds();
+
+    // Convert to 12-hour format
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+
+    // Pad minutes and seconds with a zero if they are less than 10
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+
+    // If seconds are '00', don't display them
+    let timeString = `${hours}:${minutes}${seconds !== '00' ? ':' + seconds : ''} ${ampm}`;
+
+    return timeString;
+}
+const TrainSidebar = ({
+    trains,
+    filteredTrains,
+    filters,
+    setFilters,
+    selectedTrain,
+    onTrainSelect
+}) => {
+
 
 const ExpandSideBar = ({selectedTrain}) => {
 
@@ -11,34 +42,57 @@ const ExpandSideBar = ({selectedTrain}) => {
 
     return (
         <div>
-            <button onClick={handleExpand}>More Info</button>
+            <button onClick={handleExpand}>
+                {expanded ? 'Less Info' : 'More Info'}
+            </button>
             {expanded && (
-                <div>
-                    <p>Train ID: {selectedTrain.trainId}</p>
-                    <p>Origin Location: {selectedTrain.originLocation}</p>
-                    <p>Destination Location: {selectedTrain.destinationLocation}</p>
-                    <p>Last Reported Type: {selectedTrain.lastReportedType}</p>
-                    <p>Planned Departure: {selectedTrain.plannedDeparture}</p>
-                    <p>Planned Arrival: {selectedTrain.plannedArrival}</p>
-                    <p>Actual Departure: {selectedTrain.actualDeparture}</p>
-                    <p>Actual Arrival: {selectedTrain.actualArrival}</p>
+                
+                <div className='train-card'>
+                    <div className='train-card'>
+                    <p>Last Reported Status: {selectedTrain.lastReportedType}</p>
+                    <p>Departed at: {formatTime(selectedTrain.actualDeparture)}</p>
+                    <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
+                    <SeeTrainJourney selectedTrain={selectedTrain}/>
+                    
+                    </div>
                 </div>
             )}
+            
         </div>
     );
 
-}
+};
 
+const SeeTrainJourney = ({selectedTrain}) => {
 
-const TrainSidebar = ({
-                          trains,
-                          filteredTrains,
-                          filters,
-                          setFilters,
-                          selectedTrain,
-                          onTrainSelect
-}) => {
+    const [expanded, setExpanded] = useState(false);
 
+    const handleExpand = () => {
+        setExpanded(!expanded);
+    };
+
+    return (
+        <div>
+            <button onClick={handleExpand}>
+                {expanded ? 'Hide' : 'Show Journey'}
+            </button>
+            {expanded && (
+                
+            
+                    <div className='train-card'>
+                        <h3>Train Journey</h3>
+                    <p>Stop: {}</p>
+                    <p>{formatTime(selectedTrain.actualDeparture)}</p>
+                    <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
+                    
+
+                </div>
+            )}
+            
+        </div>
+    );
+
+};
     // Extracting unique dates, locations, and statuses from trains
     const uniqueDates = [...new Set(trains.map(train => train.date))];
     const uniqueLocations = [...new Set(trains.map(train => train.originLocation))];
@@ -48,8 +102,10 @@ const TrainSidebar = ({
         setFilters({ ...filters, [filterName]: value });
     };
 
+
+
     return (
-        <div style={{ width: '20%', backgroundColor: '#9fcfd3', padding: '10px', overflowY: 'auto' }}>
+        <div style={{ width: '25%', backgroundColor: '#AFEEEE', padding: '10px', overflowY: 'auto' }}>
             <h2>Train Information</h2>
 
             {/* Date Filter *
@@ -84,8 +140,13 @@ const TrainSidebar = ({
             {filteredTrains.map(train => (
                 <div key={train.trainId} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => onTrainSelect(train)}>
                     <h3>{train.originLocation} to {train.destinationLocation}</h3>
+                    <h4>
+                    {train.scheduledDeparture && train.scheduledArrival ? 
+                        `${formatTime(train.scheduledDeparture)} - ${formatTime(train.scheduledArrival)}` 
+                        : 
+                        'Train schedule not available'}
+                </h4>
                     <p>Status: {train.lastReportedType}</p>
-
                     <ExpandSideBar selectedTrain={selectedTrain}/>
                     {/* Add more information about the train if needed */}
                 </div>

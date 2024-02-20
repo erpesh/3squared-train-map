@@ -26,7 +26,7 @@ export default function Trains({ trains, selectedTrain, setSelectedTrain }) {
     const trainIcon = new Icon({
         iconUrl:
             'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Map_icons_by_Scott_de_Jonge_-_train-station.svg/1024px-Map_icons_by_Scott_de_Jonge_-_train-station.svg.png',
-        iconSize: [30, 30],
+        iconSize: [20, 20],
     });
 
     return (
