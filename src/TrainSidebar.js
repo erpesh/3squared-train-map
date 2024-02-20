@@ -1,6 +1,6 @@
 //Component to display the list of trains and filter them based on date, location, and status
 import { Train, Circle} from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function formatTime(dateString) {
     const date = new Date(dateString);
