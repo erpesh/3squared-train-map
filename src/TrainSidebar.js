@@ -1,4 +1,5 @@
 //Component to display the list of trains and filter them based on date, location, and status
+import { Train } from 'lucide-react';
 import React, { useState } from 'react';
 
 function formatTime(dateString) {
@@ -21,6 +22,15 @@ function formatTime(dateString) {
 
     return timeString;
 }
+const TrainSidebar = ({
+    trains,
+    filteredTrains,
+    filters,
+    setFilters,
+    selectedTrain,
+    onTrainSelect
+}) => {
+
 
 const ExpandSideBar = ({selectedTrain}) => {
 
@@ -42,6 +52,7 @@ const ExpandSideBar = ({selectedTrain}) => {
                     <p>Last Reported Status: {selectedTrain.lastReportedType}</p>
                     <p>Departed at: {formatTime(selectedTrain.actualDeparture)}</p>
                     <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
+                    <SeeTrainJourney selectedTrain={selectedTrain}/>
                     
                     </div>
                 </div>
@@ -52,15 +63,36 @@ const ExpandSideBar = ({selectedTrain}) => {
 
 };
 
-const TrainSidebar = ({
-                          trains,
-                          filteredTrains,
-                          filters,
-                          setFilters,
-                          selectedTrain,
-                          onTrainSelect
-}) => {
+const SeeTrainJourney = ({selectedTrain}) => {
 
+    const [expanded, setExpanded] = useState(false);
+
+    const handleExpand = () => {
+        setExpanded(!expanded);
+    };
+
+    return (
+        <div>
+            <button onClick={handleExpand}>
+                {expanded ? 'Hide' : 'Show Journey'}
+            </button>
+            {expanded && (
+                
+            
+                    <div className='train-card'>
+                        <h3>Train Journey</h3>
+                    <p>Stop: {}</p>
+                    <p>{formatTime(selectedTrain.actualDeparture)}</p>
+                    <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
+                    
+
+                </div>
+            )}
+            
+        </div>
+    );
+
+};
     // Extracting unique dates, locations, and statuses from trains
     const uniqueDates = [...new Set(trains.map(train => train.date))];
     const uniqueLocations = [...new Set(trains.map(train => train.originLocation))];
