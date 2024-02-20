@@ -9,6 +9,7 @@ export function apiRequest(endpoint) {
 }
 
 export const fetchTrains = async (date = null) => {
+    const tiplocs = "LEEDS,BELFASTC,JAMESST,MNCRPES,SHEFSRF,NEWHVTJ,CAMBDGE,CREWEMD,GTWK,WLSDEUT,HLWY236,LOWFRMT,WLSDRMT,LINCLNC,GLGC,CARLILE,MOSEUPY,KNGX,STAFFRD"
     try {
         let today = date ? new Date(date) : new Date();
 
@@ -19,7 +20,7 @@ export const fetchTrains = async (date = null) => {
         let startDate = `${year}-${month}-${day}T00:00:00`;
         let endDate = `${year}-${month}-${day}T23:59:59`;
 
-        const trainResponse = await apiRequest(`/trains/tiploc/LEEDS,BELFASTC,JAMESST,MNCRPES,SHEFSRF,NEWHVTJ,CAMBDGE,CREWEMD,GTWK,WLSDEUT,HLWY236,LOWFRMT,WLSDRMT,LINCLNC,GLGC,CARLILE,MOSEUPY,KNGX,STAFFRD/${startDate}/${endDate}`);
+        const trainResponse = await apiRequest(`/trains/tiploc/${tiplocs}/${startDate}/${endDate}`);
         const trainData = await trainResponse.json();
         const filteredTrainData = trainData
             .filter(item => item["lastReportedType"] === "DEPARTURE" ||
@@ -29,6 +30,7 @@ export const fetchTrains = async (date = null) => {
                         t.trainId === obj.trainId
                     ))
             );
+        console.log(filteredTrainData);
         return filteredTrainData;
     }
     catch (error) {
