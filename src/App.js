@@ -2,13 +2,13 @@
 import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import Map from './map/Map';
-import TrainSidebar from './TrainSidebar';
 import Refresh from './Refresh';
 import Header from './Header';
 import Legend from './Legend';
 import {fetchTrains} from "./api";
 import {getTrainsWithMovement} from "./utils/mappers";
 import useFilters from "./hooks/useFilters";
+import Sidebar from "./sidebar/Sidebar";
 
 const App = () => {
     const [selectedTrain, setSelectedTrain] = useState(null);
@@ -40,7 +40,7 @@ const App = () => {
         <div style={{ display: 'flex', height: '100vh' }}>
             <Header/>
             <Legend/>
-            <TrainSidebar
+            <Sidebar
                 trains={trainsWithMovement}
                 filteredTrains={filteredTrains}
                 filters={filters}

@@ -21,6 +21,7 @@ const formatStation = (station) => {
     let time;
     let delayedTime;
     let delay;
+    let isPass;
 
     if (station.pass) {
         status = "On Time";
@@ -31,6 +32,7 @@ const formatStation = (station) => {
         time = convertTime(station.departure)
     }
     else if (station.plannedDeparture && station.actualDeparture) {
+        const currentDate = new Date();
         const plannedDeparture = new Date(station.plannedDeparture);
         const actualDeparture = new Date(station.actualDeparture);
 
@@ -41,9 +43,11 @@ const formatStation = (station) => {
         time = convertTimestampToTime(station.plannedDeparture);
         delayedTime = convertTimestampToTime(station.actualDeparture);
         delay = Math.abs(delayInMinutes);
+        isPass = currentDate - actualDeparture < 0;
     }
 
     return {
+        isPass,
         eventType: station.eventType,
         location: station.location,
         tiploc: station.tiploc,
