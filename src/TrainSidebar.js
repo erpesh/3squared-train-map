@@ -1,4 +1,6 @@
-import React, {useEffect, useState} from 'react';
+//Component to display the list of trains and filter them based on date, location, and status
+import { Train, Circle} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 function formatTime(dateString) {
     const date = new Date(dateString);
@@ -66,14 +68,26 @@ const SeeTrainJourney = ({selectedTrain}) => {
             {expanded && (
                 <div className='train-card'>
                     <h3>Train Journey</h3>
-                    <p>Stop: {}</p>
-                    <p>{formatTime(selectedTrain.actualDeparture)}</p>
-                    <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <div style={{ marginRight: '10px' }}>
+                            {selectedTrain.stations.map((station, index) => (
+                                <div key={index} style={{ marginBottom: '10px' }}>
+                                    <Circle size={30} padding={100} />
+                                </div>
+                            ))}
+                        </div>
+                        <div>
+                            {selectedTrain.stations.map((station, index) => (
+                                <div key={index} style={{ marginBottom: '10px' }}>
+                                    <p><b>{station.location}</b><br />{station.tiploc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             )}
         </div>
     );
-
 };
 
 const TrainSidebar = ({
