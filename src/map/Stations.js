@@ -21,8 +21,8 @@ export default function Stations({ stations }) {
                 >
                     <Tooltip>
                         <div>
-                            <h2>{station.tiploc}</h2>
                             <p>{station.location}</p>
+                            <h2>({station.tiploc})</h2>
                         </div>
                     </Tooltip>
                 </Marker>

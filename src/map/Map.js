@@ -4,9 +4,9 @@ import 'leaflet/dist/leaflet.css';
 import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 import Stations from "./Stations";
 import Routes from "./Routes";
-import Train from "./Train";
+import Trains from "./Trains";
 
-const colors = {
+export const colors = {
     onTime: "#305dbd",
     early: "#27b376",
     late: "#bf212f",
@@ -21,22 +21,25 @@ function removeDuplicates(array, property) {
     );
 }
 
-const Map = ({ trains, onTrainSelect, selectedTrain }) => {
+//TODO: display only filtered trains on the map
+
+const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
     const [routeLine, setRouteLine] = useState([]);
-    const [activeTrain, setActiveTrain] = useState(null);
     const [stations, setStations] = useState([]);
 
     const fetchAndDisplayTrainData = async (activationId, scheduleId) => {
         const scheduleData = await fetchTrainScheduleData(activationId, scheduleId);
         const movementData = await fetchTrainMovementData(activationId, scheduleId);
 
-        displayTrainRoute(movementData, scheduleData);
+        // Remove schedules that don't have latLong value
+        const filteredScheduleData = scheduleData.filter(s => s.latLong);
+
+        displayTrainRoute(movementData, filteredScheduleData);
     }
 
     useEffect(() => {
         // Clear all markers and routes
         setRouteLine([]);
-        setActiveTrain(null);
 
         if (selectedTrain) {
             fetchAndDisplayTrainData(selectedTrain.activationId, selectedTrain.scheduleId);
@@ -48,6 +51,17 @@ const Map = ({ trains, onTrainSelect, selectedTrain }) => {
         const routeSegments = [];
         const stationsList = [];
 
+        // Add first station
+        const firstSchedule = scheduleData[0];
+        stationsList.push({
+            location: firstSchedule.location,
+            tiploc: firstSchedule.tiploc,
+            position: {
+                lat: firstSchedule.latLong.latitude,
+                lng: firstSchedule.latLong.longitude,
+            }
+        })
+
         for (let i = 0; i < scheduleData.length - 1; i++) {
             const currentSchedule = scheduleData[i];
             const nextSchedule = scheduleData[i + 1];
@@ -57,58 +71,45 @@ const Map = ({ trains, onTrainSelect, selectedTrain }) => {
             if (!curLatLong || !nextlatLong)
                 continue
 
+            let color = colors.scheduled;
+            let station = currentSchedule;
             const movementIndex = movementData.findIndex(mov => mov.tiploc === nextSchedule.tiploc);
 
+            // If movement data for nextSchedule exists
             if (movementIndex !== -1) {
                 const movement = movementData[movementIndex];
                 const plannedDep = movement.plannedDeparture ?? movement.planned;
                 const actualDep = movement.actualDeparture ?? movement.actual;
 
-                let color;
-                if (!plannedDep || !actualDep)
-                    color = colors.scheduled;
-                else {
+                station = movement;
+
+                // Set color to scheduled if there's no departure data
+                if (plannedDep && actualDep) {
                     const plannedDeparture = new Date(plannedDep).getTime();
                     const actualDeparture = new Date(actualDep).getTime();
                     const delay = actualDeparture - plannedDeparture;
                     color = delay > 0 ? colors.late : delay < 0 ? colors.early : colors.onTime;
                 }
-
-                routeSegments.push({
-                    positions: [
-                        [currentSchedule.latLong.latitude, currentSchedule.latLong.longitude],
-                        [nextSchedule.latLong.latitude, nextSchedule.latLong.longitude]
-                    ],
-                    color: color
-                });
-
-                stationsList.push({
-                    location: movement.location,
-                    tiploc: movement.tiploc,
-                    position: {
-                        lat: movement.latLong.latitude,
-                        lng: movement.latLong.longitude,
-                    }
-                })
             }
-            else {
-                routeSegments.push({
-                    positions: [
-                        [currentSchedule.latLong.latitude, currentSchedule.latLong.longitude],
-                        [nextSchedule.latLong.latitude, nextSchedule.latLong.longitude]
-                    ],
-                    color: colors.scheduled,
-                });
 
-                stationsList.push({
-                    location: currentSchedule.location,
-                    tiploc: currentSchedule.tiploc,
-                    position: {
-                        lat: currentSchedule.latLong.latitude,
-                        lng: currentSchedule.latLong.longitude,
-                    }
-                })
-            }
+            // Add a route segment
+            routeSegments.push({
+                positions: [
+                    [currentSchedule.latLong.latitude, currentSchedule.latLong.longitude],
+                    [nextSchedule.latLong.latitude, nextSchedule.latLong.longitude]
+                ],
+                color: color,
+            });
+
+            // Add a station
+            stationsList.push({
+                location: station.location,
+                tiploc: station.tiploc,
+                position: {
+                    lat: station.latLong.latitude,
+                    lng: station.latLong.longitude,
+                }
+            })
         }
 
         // Remove duplicate stations
@@ -130,13 +131,7 @@ const Map = ({ trains, onTrainSelect, selectedTrain }) => {
             />
 
             {stations && <Stations stations={stations}/>}
-            {trains && trains.length > 0 &&
-                trains.map(train => <Train
-                    key={train.activationId}
-                    train={train}
-                    selectedTrain={selectedTrain}
-                    setSelectedTrain={onTrainSelect}
-                />)}
+            {trains && trains.length > 0 && <Trains trains={trains} selectedTrain={selectedTrain} setSelectedTrain={setSelectedTrain}/>}
             {routeLine && <Routes routeLine={routeLine}/>}
             <ZoomControl
                 position={'bottomleft'}

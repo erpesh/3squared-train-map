@@ -70,12 +70,19 @@
 
 
 
-.Clock {
+.Refresh {
   position: absolute;
   z-index:1000;
-  top: 30px;
+  top: 40px;
   right: 5px;
   font-size: 7px;
+  padding: 5px;
+  background: rgba(105,118,124,0.4);
+  border-radius:5%;
+  border: 3px solid;
+  border-color:#63cfd6;
+  text-align: center;
+  
 }
 
 .header {
@@ -101,3 +108,87 @@
   margin: 0;
 }
 
+.train-info-container {
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.train-info-container h2 {
+  margin-top: 0;
+}
+
+.train-info-container p {
+  margin: 5px 0;
+}
+
+.arrival-info {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.arrival-info .icon {
+  margin-right: 5px;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.icon {
+  height: 16px;
+  width: 16px;
+}
+.pl-2 {
+  padding-left: 8px;
+}
+
+button {
+  appearance: none;
+  margin: 4px;
+  border: 1px solid rgba(27, 31, 35, .15);
+  border-radius: 6px;
+  box-shadow: rgba(27, 31, 35, .1) 0 1px 0;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 18px;
+  padding: 4px 12px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+button:focus:not(:focus-visible):not(.focus-visible) {
+  box-shadow: none;
+  outline: none;
+}
+
+.primary-bg {
+  background-color: #63cfd6;
+}
+
+.primary-bg:hover {
+  background-color: #5bb1b7;
+}
+.secondary-bg {
+  background-color: #656569;
+}
+
+.secondary-bg:hover {
+  background-color: #414344;
+}

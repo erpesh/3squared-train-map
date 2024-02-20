@@ -52,12 +52,14 @@ const ExpandSideBar = ({selectedTrain}) => {
 
 };
 
-const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
-    const [filters, setFilters] = useState({
-        date: null,
-        location: null,
-        status: null
-    });
+const TrainSidebar = ({
+                          trains,
+                          filteredTrains,
+                          filters,
+                          setFilters,
+                          selectedTrain,
+                          onTrainSelect
+}) => {
 
     // Extracting unique dates, locations, and statuses from trains
     const uniqueDates = [...new Set(trains.map(train => train.date))];
@@ -92,18 +94,18 @@ const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
             <div>
                 <h3>Filter by Location:</h3>
                 {uniqueLocations.map(location => (
-                    <button key={location} onClick={() => handleFilterChange('location', location)}>{location}</button>
+                    <button className={"secondary-bg"} key={location} onClick={() => handleFilterChange('location', location)}>{location}</button>
                 ))}
-                <button onClick={() => handleFilterChange('location', null)}>Clear Location Filter</button>
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('location', null)}>Clear Location Filter</button>
             </div>
 
             {/* Status Filter */}
             <div>
                 <h3>Filter by Status:</h3>
                 {uniqueStatuses.map(status => (
-                    <button key={status} onClick={() => handleFilterChange('status', status)}>{status}</button>
+                    <button className={"secondary-bg"} key={status} onClick={() => handleFilterChange('status', status)}>{status}</button>
                 ))}
-                <button onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
             </div>
 
             {/* Trains */}

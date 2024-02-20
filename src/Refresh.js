@@ -1,6 +1,7 @@
 import { useState } from "react";
+import Timer from './Timer'
 
-const Clock = () => {
+const Refresh = ({ refreshTrains }) => {
     let time = new Date().toLocaleTimeString();
     const [currentTime, setCurrentTime] = useState(time);
 
@@ -12,12 +13,14 @@ const Clock = () => {
     setInterval(updateTime, 1000);
 
     return (
-        <div className="Clock">
+        <div className="Refresh">
             <h1>Live time: {currentTime}</h1>
+            <h1>
+                Refreshes in: <Timer refreshTrains={refreshTrains}/>
+            </h1>
+            <button className={'primary-bg'} onClick={refreshTrains}>Refresh</button>
         </div>
-        
-    
     )
 }
 
-export default Clock;
+export default Refresh;
