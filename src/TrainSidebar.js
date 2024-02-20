@@ -70,11 +70,7 @@ const TrainSidebar = ({
         setFilters({ ...filters, [filterName]: value });
     };
 
-    const filteredTrains = trains.filter(train => {
-        return (!filters.date || train.date === filters.date) &&
-               (!filters.location || train.originLocation === filters.location) &&
-               (!filters.status || train.lastReportedType === filters.status);
-    });
+
 
     return (
         <div style={{ width: '25%', backgroundColor: '#AFEEEE', padding: '10px', overflowY: 'auto' }}>
@@ -112,8 +108,12 @@ const TrainSidebar = ({
             {filteredTrains.map(train => (
                 <div key={train.trainId} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => onTrainSelect(train)}>
                     <h3>{train.originLocation} to {train.destinationLocation}</h3>
-                    <h4>{formatTime(selectedTrain.scheduledDeparture)} 
-                     - {formatTime(selectedTrain.scheduledArrival)}</h4>
+                    <h4>
+                    {train.scheduledDeparture && train.scheduledArrival ? 
+                        `${formatTime(train.scheduledDeparture)} - ${formatTime(train.scheduledArrival)}` 
+                        : 
+                        'Train schedule not available'}
+                </h4>
                     <p>Status: {train.lastReportedType}</p>
                     <ExpandSideBar selectedTrain={selectedTrain}/>
                     {/* Add more information about the train if needed */}
