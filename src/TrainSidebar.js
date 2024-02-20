@@ -1,5 +1,5 @@
 //Component to display the list of trains and filter them based on date, location, and status
-import { Train } from 'lucide-react';
+import { Train, Circle} from 'lucide-react';
 import React, { useState } from 'react';
 
 function formatTime(dateString) {
@@ -77,21 +77,28 @@ const SeeTrainJourney = ({selectedTrain}) => {
                 {expanded ? 'Hide' : 'Show Journey'}
             </button>
             {expanded && (
-                
-            
-                    <div className='train-card'>
-                        <h3>Train Journey</h3>
-                    <p>Stop: {}</p>
-                    <p>{formatTime(selectedTrain.actualDeparture)}</p>
-                    <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
-                    
-
+                <div className='train-card'>
+                    <h3>Train Journey</h3>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <div style={{ marginRight: '10px' }}>
+                            {selectedTrain.stations.map((station, index) => (
+                                <div key={index} style={{ marginBottom: '10px' }}>
+                                    <Circle size={30} padding={100} />
+                                </div>
+                            ))}
+                        </div>
+                        <div>
+                            {selectedTrain.stations.map((station, index) => (
+                                <div key={index} style={{ marginBottom: '10px' }}>
+                                    <p><b>{station.location}</b><br />{station.tiploc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             )}
-            
         </div>
     );
-
 };
     // Extracting unique dates, locations, and statuses from trains
     const uniqueDates = [...new Set(trains.map(train => train.date))];
