@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import './App.css';
 import Map from './map/Map';
 import TrainSidebar from './TrainSidebar';
@@ -7,12 +7,14 @@ import Refresh from './Refresh';
 import Header from './Header';
 
 import {apiRequest, fetchTrainMovementData} from "./api";
+import useFilters from "./hooks/useFilters";
 
 const App = () => {
     const [selectedTrain, setSelectedTrain] = useState(null);
-    const [trains, setTrains] = useState([]);
     const [trainsWithMovement, setTrainsWithMovement] = useState([]);
     const [refresh, setRefresh] = useState(false);
+
+    const {filteredTrains, filters, setFilters} = useFilters(trainsWithMovement);
 
     async function fetchTrains(date= null) {
         let today = date ? new Date(date) : new Date();
@@ -35,7 +37,6 @@ const App = () => {
                 ))
             );
 
-        setTrains(filteredTrainData);
         const trainsWithMovement = await getTrainsWithMovement(filteredTrainData);
         setTrainsWithMovement(trainsWithMovement);
     }
@@ -78,13 +79,16 @@ const App = () => {
         <div style={{ display: 'flex', height: '100vh' }}>
             <Header/>
             <TrainSidebar
-                trains={trains}
+                trains={trainsWithMovement}
+                filteredTrains={filteredTrains}
+                filters={filters}
+                setFilters={setFilters}
                 selectedTrain={selectedTrain}
                 onTrainSelect={setSelectedTrain}
             />
             <div style={{ flex: 1 }}>
                 <Map
-                    trains={trainsWithMovement}
+                    trains={filteredTrains}
                     selectedTrain={selectedTrain}
                     setSelectedTrain={setSelectedTrain}
                 />

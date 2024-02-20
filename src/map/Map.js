@@ -21,6 +21,8 @@ function removeDuplicates(array, property) {
     );
 }
 
+//TODO: display only filtered trains on the map
+
 const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
     const [routeLine, setRouteLine] = useState([]);
     const [stations, setStations] = useState([]);

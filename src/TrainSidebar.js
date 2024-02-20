@@ -26,16 +26,18 @@ const ExpandSideBar = ({selectedTrain}) => {
             )}
         </div>
     );
-    
+
 }
 
 
-const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
-    const [filters, setFilters] = useState({
-        date: null,
-        location: null,
-        status: null
-    });
+const TrainSidebar = ({
+                          trains,
+                          filteredTrains,
+                          filters,
+                          setFilters,
+                          selectedTrain,
+                          onTrainSelect
+}) => {
 
     // Extracting unique dates, locations, and statuses from trains
     const uniqueDates = [...new Set(trains.map(train => train.date))];
@@ -45,15 +47,6 @@ const TrainSidebar = ({ trains, selectedTrain, onTrainSelect }) => {
     const handleFilterChange = (filterName, value) => {
         setFilters({ ...filters, [filterName]: value });
     };
-
-
-
-
-    const filteredTrains = trains.filter(train => {
-        return (!filters.date || train.date === filters.date) &&
-               (!filters.location || train.originLocation === filters.location) &&
-               (!filters.status || train.lastReportedType === filters.status);
-    });
 
     return (
         <div style={{ width: '20%', backgroundColor: '#9fcfd3', padding: '10px', overflowY: 'auto' }}>
