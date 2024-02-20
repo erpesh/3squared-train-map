@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {formatTime} from "../utils/formatters";
 import ExpandSideBar from "./ExpandSidebar";
 
@@ -15,9 +15,16 @@ const Sidebar = ({
     const uniqueDates = [...new Set(trains.map(train => train.date))];
     const uniqueLocations = [...new Set(trains.map(train => train.originLocation))];
     const uniqueStatuses = [...new Set(trains.map(train => train.lastReportedType))];
+    const [selectedLocation, setSelectedLocation] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState(null);
 
     const handleFilterChange = (filterName, value) => {
         setFilters({ ...filters, [filterName]: value });
+        if (filterName === 'location') {
+            setSelectedLocation(value);
+        } else if (filterName === 'status') {
+            setSelectedStatus(value);
+        }
     };
 
     const refs = Array(trains.length).fill(0)
@@ -59,6 +66,11 @@ const Sidebar = ({
                         <option key={originLocation} value={originLocation}>{originLocation}</option>
                     ))}
                 </select>
+                <h3>Filter by Location: {selectedLocation} </h3>
+                {uniqueLocations.map(location => (
+                    <button className={"secondary-bg"} key={location} onClick={() => handleFilterChange('location', location)}>{location}</button>
+                ))}
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('location', null)}>Clear Location Filter</button>
             </div>
             <div>
                 <h3>Trains to </h3>
@@ -68,6 +80,12 @@ const Sidebar = ({
                         <option key={destinationLocation} value={destinationLocation}>{destinationLocation}</option>
                     ))}
                 </select>
+                <h3>Filter by Status: {selectedStatus}</h3>
+                {uniqueStatuses.map(status => (
+                    <button className={"secondary-bg"} key={status} onClick={() => handleFilterChange('status', status)}>{status}</button>
+                ))}
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
+                <h3></h3>
             </div>
 
             {/* Trains */}

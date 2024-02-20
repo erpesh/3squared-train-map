@@ -34,8 +34,6 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
 
         if (selectedTrain) {
             fetchAndDisplayTrainData(selectedTrain.activationId, selectedTrain.scheduleId);
-            console.log(selectedTrain)
-            // map.setView([])
         }
     }, [selectedTrain])
 
