@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {formatTime} from "../utils/formatters";
 import ExpandSideBar from "./ExpandSidebar";
 
+
 const Sidebar = ({
                           trains,
                           filteredTrains,
@@ -58,19 +59,24 @@ const Sidebar = ({
 
             {/* Location Filter */}
             <div>
-                <h3>Filter by Location: {selectedLocation} </h3>
-                {uniqueLocations.map(location => (
-                    <button className={"secondary-bg"} key={location} onClick={() => handleFilterChange('location', location)}>{location}</button>
-                ))}
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('location', null)}>Clear Location Filter</button>
-            </div>
+                <h3>Trains from </h3>
+                <select onChange={(e) => handleFilterChange('location', e.target.value)}>
+                    <option value="">----/----</option>
+                    {uniqueLocations.map(originLocation => (
+                        <option key={originLocation} value={originLocation}>{originLocation}</option>
+                    ))}
+                </select>
 
-            {/* Status Filter */}
+            </div>
             <div>
-                <h3>Filter by Status: {selectedStatus}</h3>
-                {uniqueStatuses.map(status => (
-                    <button className={"secondary-bg"} key={status} onClick={() => handleFilterChange('status', status)}>{status}</button>
-                ))}
+                <h3>Trains to </h3>
+                <select onChange={(e) => handleFilterChange('location', e.target.value)}>
+                    <option value="">----/----</option>
+                    {uniqueLocations.map(destinationLocation => (
+                        <option key={destinationLocation} value={destinationLocation}>{destinationLocation}</option>
+                    ))}
+                </select>
+
                 <button className={"secondary-bg"} onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
                 <h3></h3>
             </div>
