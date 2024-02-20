@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, ZoomControl, ScaleControl } from 'react-leaflet';
+import {MapContainer, TileLayer, ZoomControl, ScaleControl} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 import Stations from "./Stations";
@@ -34,6 +34,8 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
 
         if (selectedTrain) {
             fetchAndDisplayTrainData(selectedTrain.activationId, selectedTrain.scheduleId);
+            console.log(selectedTrain)
+            // map.setView([])
         }
     }, [selectedTrain])
 
@@ -48,7 +50,12 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
     if (!trains || trains.length === 0) return <div>Loading</div>
 
     return (
-        <MapContainer zoomControl={false} center={[54, -0.5]} zoom={6} style={{ height: '100vh', background: 'ghostwhite' }}>
+        <MapContainer
+            zoomControl={false}
+            center={[54, -0.5]}
+            zoom={6}
+            style={{ height: '100vh', background: 'ghostwhite' }}
+        >
             <TileLayer
                 url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                 maxZoom={20}

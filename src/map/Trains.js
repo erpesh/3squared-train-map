@@ -1,5 +1,5 @@
-import {Marker, Tooltip} from "react-leaflet";
-import React from "react";
+import {Marker, Tooltip, useMap} from "react-leaflet";
+import React, {useEffect} from "react";
 import {Icon} from "leaflet";
 import {Clock} from "lucide-react";
 import {colors} from "./Map";
@@ -16,6 +16,8 @@ const formatDate = (dateString) => {
 }
 
 export default function Trains({ trains, selectedTrain, setSelectedTrain }) {
+    const map = useMap();
+
     const getPosition = (latLong) => {
         return  [
             latLong.latitude,
@@ -28,6 +30,14 @@ export default function Trains({ trains, selectedTrain, setSelectedTrain }) {
             'https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Map_icons_by_Scott_de_Jonge_-_train-station.svg/1024px-Map_icons_by_Scott_de_Jonge_-_train-station.svg.png',
         iconSize: [20, 20],
     });
+
+    // Set view to the selected train
+    useEffect(() => {
+        if (selectedTrain) {
+            const latLong = selectedTrain.movement.latLong;
+            map.setView([latLong.latitude, latLong.longitude])
+        }
+    }, [selectedTrain])
 
     return (
         <>
