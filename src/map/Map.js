@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl, ScaleControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 import Stations from "./Stations";
@@ -133,9 +133,8 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
             {stations && <Stations stations={stations}/>}
             {trains && trains.length > 0 && <Trains trains={trains} selectedTrain={selectedTrain} setSelectedTrain={setSelectedTrain}/>}
             {routeLine && <Routes routeLine={routeLine}/>}
-            <ZoomControl
-                position={'bottomleft'}
-            />
+            <ZoomControl position={'bottomleft'}/>
+            <ScaleControl position={'bottomright'}/>
         </MapContainer>
     );
 };

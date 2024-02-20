@@ -16,9 +16,9 @@ const Refresh = ({ refreshTrains }) => {
         <div className="Refresh">
             <h1>Live time: {currentTime}</h1>
             <h1>
-                Refreshes in: <Timer refreshTrains={refreshTrains}/>
+                Updates in: <Timer refreshTrains={refreshTrains}/>
             </h1>
-            <button className={'primary-bg'} onClick={refreshTrains}>Refresh</button>
+            <button className={'primary-bg'} onClick={refreshTrains}>Update</button>
         </div>
     )
 }

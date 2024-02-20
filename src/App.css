@@ -192,3 +192,38 @@ button:focus:not(:focus-visible):not(.focus-visible) {
 .secondary-bg:hover {
   background-color: #414344;
 }
+
+
+
+.legend-app {
+  position: absolute;
+  z-index:1000;
+  bottom: 70px;
+  right: 5px;
+  font-size: 13px;
+  font-weight:bold;
+  padding: 10px;
+  background: rgba(105,118,124,0.4);
+  border-radius:5%;
+  border: 3px solid;
+  border-color:#63cfd6;
+  text-align: center;
+  
+}
+
+.legend-key-container {
+  border: 1px solid #ccc; /* Add border for visualization */
+  padding: 5px; /* Add padding for spacing */
+  max-width: 600px; /* Set maximum width to avoid stretching */
+  
+}
+.legend-key {
+  display: flex;
+  flex-direction: column;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+

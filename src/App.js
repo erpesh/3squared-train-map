@@ -5,6 +5,7 @@ import Map from './map/Map';
 import TrainSidebar from './TrainSidebar';
 import Refresh from './Refresh';
 import Header from './Header';
+import Legend from './Legend';
 
 import {apiRequest, fetchTrainMovementData} from "./api";
 import useFilters from "./hooks/useFilters";
@@ -78,6 +79,7 @@ const App = () => {
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
             <Header/>
+            <Legend/>
             <TrainSidebar
                 trains={trainsWithMovement}
                 filteredTrains={filteredTrains}
