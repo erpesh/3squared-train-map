@@ -43,6 +43,7 @@ const formatStation = (station) => {
     }
 
     return {
+        eventType: station.eventType,
         location: station.location,
         tiploc: station.tiploc,
         position: {
@@ -58,9 +59,9 @@ const formatStation = (station) => {
 
 function removeDuplicates(array, property) {
     return array.filter((obj, index, self) =>
-            index === self.findIndex((o) => (
-                o[property] === obj[property]
-            ))
+        index === self.findIndex((o) => (
+            o[property] === obj[property]
+        ))
     );
 }
 
@@ -70,14 +71,7 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
 
     // Add first station
     const firstSchedule = scheduleData[0];
-    stationsList.push({
-        location: firstSchedule.location,
-        tiploc: firstSchedule.tiploc,
-        position: {
-            lat: firstSchedule.latLong.latitude,
-            lng: firstSchedule.latLong.longitude,
-        }
-    })
+    stationsList.push(formatStation(firstSchedule));
 
     for (let i = 0; i < scheduleData.length - 1; i++) {
         const currentSchedule = scheduleData[i];
@@ -123,7 +117,8 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
     }
 
     // Remove duplicate stations
-    const filteredStations = removeDuplicates(stationsList, "tiploc");
+    const filteredStations = removeDuplicates(stationsList, "tiploc")
+        .filter(station => station.eventType && station.eventType === "ARRIVAL");
     return {
         stations: filteredStations,
         routes: routeSegments
