@@ -9,12 +9,11 @@ import {fetchTrains} from "./api";
 import {getTrainsWithMovement} from "./utils/mappers";
 import useFilters from "./hooks/useFilters";
 import Sidebar from "./sidebar/Sidebar";
+import useRefresh from "./hooks/useRefresh";
 
 const App = () => {
     const [selectedTrain, setSelectedTrain] = useState(null);
-    const selectedTrainRef = useRef(null);
     const [trainsWithMovement, setTrainsWithMovement] = useState([]);
-    const [refresh, setRefresh] = useState(false);
 
     const {filteredTrains, filters, setFilters} = useFilters(trainsWithMovement);
 
@@ -25,16 +24,7 @@ const App = () => {
         setTrainsWithMovement(trainsWithMovement);
     }
 
-    const selectTrain = (train) => {
-        setSelectedTrain(train);
-
-    }
-
-    const refreshTrains = () => setRefresh(!refresh);
-
-    useEffect(() => {
-        getTrains();
-    }, [refresh]);
+    const refreshTrains = useRefresh(getTrains);
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>

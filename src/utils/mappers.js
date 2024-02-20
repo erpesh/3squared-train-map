@@ -1,66 +1,6 @@
 import {colors} from "../map/Map";
 import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
-
-function convertTime(inputTime) {
-    inputTime = inputTime.toString();
-    if (inputTime.length !== 4) return "Invalid time format";
-    const hours = inputTime.substring(0, 2).padStart(2, '0');
-    const minutes = inputTime.substring(2).padStart(2, '0');
-    return hours + ":" + minutes;
-}
-
-function convertTimestampToTime(timestamp) {
-    const date = new Date(timestamp);
-    const hours = date.getHours().toString().padStart(2, '0');
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    return hours + ":" + minutes;
-}
-
-const formatStation = (station) => {
-    let status;
-    let time;
-    let delayedTime;
-    let delay;
-    let isPass;
-
-    if (station.pass) {
-        status = "On Time";
-        time = convertTime(station.pass);
-    }
-    else if (station.departure) {
-        status = "On Time";
-        time = convertTime(station.departure)
-    }
-    else if (station.plannedDeparture && station.actualDeparture) {
-        const currentDate = new Date();
-        const plannedDeparture = new Date(station.plannedDeparture);
-        const actualDeparture = new Date(station.actualDeparture);
-
-        const delayInMilliseconds = actualDeparture - plannedDeparture;
-        const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
-        status = delayInMilliseconds === 0 ? "On Time" : delayInMilliseconds > 0 ? "Late" : "Early";
-
-        time = convertTimestampToTime(station.plannedDeparture);
-        delayedTime = convertTimestampToTime(station.actualDeparture);
-        delay = Math.abs(delayInMinutes);
-        isPass = currentDate - actualDeparture < 0;
-    }
-
-    return {
-        isPass,
-        eventType: station.eventType,
-        location: station.location,
-        tiploc: station.tiploc,
-        position: {
-            lat: station.latLong.latitude,
-            lng: station.latLong.longitude,
-        },
-        status,
-        time,
-        delayedTime,
-        delay,
-    }
-}
+import {formatStation} from "./formatters";
 
 function removeDuplicates(array, property) {
     return array.filter((obj, index, self) =>

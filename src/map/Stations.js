@@ -29,10 +29,10 @@ export default function Stations({ stations }) {
                                 <div className="arrival-info">
                                     <Clock className="icon"/>
                                     <span>{station.time}</span>
-                                    {station.status !== "On Time" && <span className={"pl-2"}>{station.delay !== 0 ?
-                                        `${station.delay} minute(s)` : "1 minute"}
-                                    <span> {station.status.toLowerCase()}</span>
-                                </span>}
+                                        {station.status !== "On Time" && <span className={"pl-2"}>{station.delay !== 0 ?
+                                            `${station.delay} minute(s)` : "1 minute"}
+                                        <span> {station.status.toLowerCase()}</span>
+                                    </span>}
                                 </div>
                                 <span className="status-indicator" style={{
                                     backgroundColor: station.status === "Late" ? colors.late : station.status === "Early" ?
