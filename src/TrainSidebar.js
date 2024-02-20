@@ -1,6 +1,4 @@
-//Component to display the list of trains and filter them based on date, location, and status
-import { Train } from 'lucide-react';
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
 function formatTime(dateString) {
     const date = new Date(dateString);
@@ -22,18 +20,8 @@ function formatTime(dateString) {
 
     return timeString;
 }
-const TrainSidebar = ({
-    trains,
-    filteredTrains,
-    filters,
-    setFilters,
-    selectedTrain,
-    onTrainSelect
-}) => {
-
 
 const ExpandSideBar = ({selectedTrain}) => {
-
     const [expanded, setExpanded] = useState(false);
 
     const handleExpand = () => {
@@ -46,25 +34,24 @@ const ExpandSideBar = ({selectedTrain}) => {
                 {expanded ? 'Less Info' : 'More Info'}
             </button>
             {expanded && (
-                
+
                 <div className='train-card'>
                     <div className='train-card'>
-                    <p>Last Reported Status: {selectedTrain.lastReportedType}</p>
-                    <p>Departed at: {formatTime(selectedTrain.actualDeparture)}</p>
-                    <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
-                    <SeeTrainJourney selectedTrain={selectedTrain}/>
-                    
+                        <p>Last Reported Status: {selectedTrain.lastReportedType}</p>
+                        <p>Departed at: {formatTime(selectedTrain.actualDeparture)}</p>
+                        <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
+                        <SeeTrainJourney selectedTrain={selectedTrain}/>
+
                     </div>
                 </div>
             )}
-            
+
         </div>
     );
 
 };
 
 const SeeTrainJourney = ({selectedTrain}) => {
-
     const [expanded, setExpanded] = useState(false);
 
     const handleExpand = () => {
@@ -77,22 +64,26 @@ const SeeTrainJourney = ({selectedTrain}) => {
                 {expanded ? 'Hide' : 'Show Journey'}
             </button>
             {expanded && (
-                
-            
-                    <div className='train-card'>
-                        <h3>Train Journey</h3>
+                <div className='train-card'>
+                    <h3>Train Journey</h3>
                     <p>Stop: {}</p>
                     <p>{formatTime(selectedTrain.actualDeparture)}</p>
                     <p>Arrived at: {formatTime(selectedTrain.actualArrival)}</p>
-                    
-
                 </div>
             )}
-            
         </div>
     );
 
 };
+
+const TrainSidebar = ({
+    trains,
+    filteredTrains,
+    filters,
+    setFilters,
+    selectedTrain,
+    onTrainSelect
+}) => {
     // Extracting unique dates, locations, and statuses from trains
     const uniqueDates = [...new Set(trains.map(train => train.date))];
     const uniqueLocations = [...new Set(trains.map(train => train.originLocation))];
@@ -102,7 +93,21 @@ const SeeTrainJourney = ({selectedTrain}) => {
         setFilters({ ...filters, [filterName]: value });
     };
 
+    const refs = Array(trains.length).fill(0)
+        .map(_ => React.createRef())
 
+    const handleRefScroll = (id) => {
+        const index = filteredTrains.findIndex(train => train.trainId === id);
+        refs[index].current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+        })
+    }
+
+    useEffect(() => {
+        if (selectedTrain)
+            handleRefScroll(selectedTrain.trainId)
+    }, [selectedTrain])
 
     return (
         <div style={{ width: '25%', backgroundColor: '#AFEEEE', padding: '10px', overflowY: 'auto' }}>
@@ -137,8 +142,8 @@ const SeeTrainJourney = ({selectedTrain}) => {
             </div>
 
             {/* Trains */}
-            {filteredTrains.map(train => (
-                <div key={train.trainId} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => onTrainSelect(train)}>
+            {filteredTrains.map((train, index) => (
+                <div key={train.trainId} ref={refs[index]} className={`train-card ${selectedTrain === train ? 'selected' : ''}`} onClick={() => onTrainSelect(train)}>
                     <h3>{train.originLocation} to {train.destinationLocation}</h3>
                     <h4>
                     {train.scheduledDeparture && train.scheduledArrival ? 

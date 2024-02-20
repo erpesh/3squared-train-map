@@ -1,4 +1,5 @@
 import {colors} from "../map/Map";
+import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 
 function convertTime(inputTime) {
     inputTime = inputTime.toString();
@@ -70,7 +71,10 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
     const stationsList = [];
 
     // Add first station
-    const firstSchedule = scheduleData[0];
+    const firstSchedule = {
+        ...scheduleData[0],
+        eventType: "ARRIVAL"
+    };
     stationsList.push(formatStation(firstSchedule));
 
     for (let i = 0; i < scheduleData.length - 1; i++) {
@@ -115,6 +119,12 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
         // Add a station
         stationsList.push(formatStation(station));
     }
+    // Add last station
+    const lastSchedule = {
+        ...scheduleData[scheduleData.length - 1],
+        eventType: "ARRIVAL"
+    };
+    stationsList.push(formatStation(lastSchedule));
 
     // Remove duplicate stations
     const filteredStations = removeDuplicates(stationsList, "tiploc")
@@ -123,4 +133,46 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
         stations: filteredStations,
         routes: routeSegments
     }
+}
+
+const getMovementAndSchedule = async (activationId, scheduleId) => {
+    const [movement, schedule] = await Promise.all([
+        fetchTrainMovementData(activationId, scheduleId),
+        fetchTrainScheduleData(activationId, scheduleId)
+    ])
+    return {
+        movement,
+        schedule
+    };
+}
+
+export async function getTrainsWithMovement(trains) {
+    const data = await Promise.all(
+        trains.map(train => getMovementAndSchedule(train.activationId, train.scheduleId))
+    )
+
+    const trainsWithMovement = [];
+    for (let i = 0; i < trains.length; i++) {
+        const {movement, schedule} = data[i];
+        const {stations} = getStationsAndRoutes(movement, schedule);
+
+        const train = trains[i];
+        const actualArrival = new Date(train.actualArrival);
+        const scheduledArrival = new Date(train.scheduledArrival);
+
+        const delayInMilliseconds = actualArrival - scheduledArrival;
+        const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
+
+        const isLate = delayInMilliseconds > 0;
+
+        trainsWithMovement.push({
+            ...train,
+            stations,
+            movement: movement[movement.length - 1],
+            isLate,
+            delayInMinutes
+        })
+    }
+    console.log(trainsWithMovement);
+    return trainsWithMovement;
 }
