@@ -1,5 +1,6 @@
 //Component to display the list of trains and filter them based on date, location, and status
-import { Train, Circle} from 'lucide-react';
+import { Train, Circle, MoreVertical, Goal} from 'lucide-react';
+
 import React, { useState, useEffect } from 'react';
 
 function formatTime(dateString) {
@@ -66,15 +67,17 @@ const SeeTrainJourney = ({selectedTrain}) => {
                 {expanded ? 'Hide' : 'Show Journey'}
             </button>
             {expanded && (
-                <div className='train-card'>
+                <div>
                     <h3>Train Journey</h3>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                         <div style={{ marginRight: '10px' }}>
                             {selectedTrain.stations.map((station, index) => (
-                                <div key={index} style={{ marginBottom: '10px' }}>
-                                    <Circle size={30} padding={100} />
+                                <div key={index} style={{ marginBottom: '0px' }}>   
+                                    {index === 0 || index === selectedTrain.stations.length -1 ? <Goal size={30} padding={0} />  : <Circle size={30} padding={10} />  }
+                                    <MoreVertical size={30} padding={0} />
                                 </div>
                             ))}
+
                         </div>
                         <div>
                             {selectedTrain.stations.map((station, index) => (
