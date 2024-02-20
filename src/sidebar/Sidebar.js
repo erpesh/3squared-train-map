@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import {formatTime} from "../utils/formatters";
 import ExpandSideBar from "./ExpandSidebar";
 
+
 const Sidebar = ({
                           trains,
                           filteredTrains,
@@ -51,21 +52,22 @@ const Sidebar = ({
 
             {/* Location Filter */}
             <div>
-                <h3>Filter by Location:</h3>
-                {uniqueLocations.map(location => (
-                    <button className={"secondary-bg"} key={location} onClick={() => handleFilterChange('location', location)}>{location}</button>
-                ))}
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('location', null)}>Clear Location Filter</button>
+                <h3>Trains from </h3>
+                <select onChange={(e) => handleFilterChange('location', e.target.value)}>
+                    <option value="">----/----</option>
+                    {uniqueLocations.map(originLocation => (
+                        <option key={originLocation} value={originLocation}>{originLocation}</option>
+                    ))}
+                </select>
             </div>
-
-            {/* Status Filter */}
             <div>
-                <h3>Filter by Status:</h3>
-                {uniqueStatuses.map(status => (
-                    <button className={"secondary-bg"} key={status} onClick={() => handleFilterChange('status', status)}>{status}</button>
-                ))}
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
-                <h3></h3>
+                <h3>Trains to </h3>
+                <select onChange={(e) => handleFilterChange('location', e.target.value)}>
+                    <option value="">----/----</option>
+                    {uniqueLocations.map(destinationLocation => (
+                        <option key={destinationLocation} value={destinationLocation}>{destinationLocation}</option>
+                    ))}
+                </select>
             </div>
 
             {/* Trains */}
