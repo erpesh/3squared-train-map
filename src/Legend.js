@@ -13,7 +13,7 @@ const Legend = () => {
         { iconSrc: 'https://i.imgur.com/wfYKMzc.png', text: 'On Time' },
         { iconSrc: 'https://i.imgur.com/74NOaVM.png', text: 'Late' },
         { iconSrc: 'https://i.imgur.com/eh2ZY4i.png', text: 'Early' },
-        { iconSrc: 'https://i.imgur.com/jkI5FSi.png', text: 'Scheduled' }
+        { iconSrc: 'https://i.imgur.com/jkI5FSi.png', text: 'No Report' }
     ];
 
   return (

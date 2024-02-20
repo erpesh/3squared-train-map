@@ -88,14 +88,17 @@
 .header {
   display: flex;
   position: fixed;
-  width: 98%;
-  height: 4.5%;
+  top: 0px;
+  right: 0px;
+  width: 70.7%;
+  height: 4%;
   z-index:1000;
   align-items: center;
   justify-content: space-between;
   padding:0 20px;
-  background-color: #63cfd6;
-  color: white;
+  background-color: rgba(103, 219, 217, 0.7);
+  border: 3px solid;
+  border-color:#63cfd6;
 }
 
 .logo {

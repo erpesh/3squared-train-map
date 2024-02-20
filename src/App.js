@@ -1,18 +1,18 @@
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import './App.css';
 import Map from './map/Map';
 import TrainSidebar from './TrainSidebar';
 import Refresh from './Refresh';
 import Header from './Header';
 import Legend from './Legend';
-
-import {apiRequest, fetchTrainMovementData, fetchTrains, fetchTrainScheduleData} from "./api";
+import {fetchTrains} from "./api";
+import {getTrainsWithMovement} from "./utils/mappers";
 import useFilters from "./hooks/useFilters";
-import {getStationsAndRoutes} from "./utils/mappers";
 
 const App = () => {
     const [selectedTrain, setSelectedTrain] = useState(null);
+    const selectedTrainRef = useRef(null);
     const [trainsWithMovement, setTrainsWithMovement] = useState([]);
     const [refresh, setRefresh] = useState(false);
 
@@ -25,46 +25,9 @@ const App = () => {
         setTrainsWithMovement(trainsWithMovement);
     }
 
-    const getMovementAndSchedule = async (activationId, scheduleId) => {
-        const [movement, schedule] = await Promise.all([
-            fetchTrainMovementData(activationId, scheduleId),
-            fetchTrainScheduleData(activationId, scheduleId)
-        ])
-        return {
-            movement,
-            schedule
-        };
-    }
+    const selectTrain = (train) => {
+        setSelectedTrain(train);
 
-    async function getTrainsWithMovement(trains) {
-        const data = await Promise.all(
-            trains.map(train => getMovementAndSchedule(train.activationId, train.scheduleId))
-        )
-
-        const trainsWithMovement = [];
-        for (let i = 0; i < trains.length; i++) {
-            const {movement, schedule} = data[i];
-            const {stations} = getStationsAndRoutes(movement, schedule);
-
-            const train = trains[i];
-            const actualArrival = new Date(train.actualArrival);
-            const scheduledArrival = new Date(train.scheduledArrival);
-
-            const delayInMilliseconds = actualArrival - scheduledArrival;
-            const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
-
-            const isLate = delayInMilliseconds > 0;
-
-            trainsWithMovement.push({
-                ...train,
-                stations,
-                movement: movement[movement.length - 1],
-                isLate,
-                delayInMinutes
-            })
-        }
-        console.log(trainsWithMovement);
-        return trainsWithMovement;
     }
 
     const refreshTrains = () => setRefresh(!refresh);
