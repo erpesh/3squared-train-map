@@ -15,17 +15,20 @@ const Sidebar = ({
     const uniqueDates = [...new Set(trains.map(train => train.date))];
     const uniqueLocations = [...new Set(trains.map(train => train.originLocation))];
     const uniqueStatuses = [...new Set(trains.map(train => train.lastReportedType))];
-    const [selectedLocation, setSelectedLocation] = useState(null);
-    const [selectedStatus, setSelectedStatus] = useState(null);
+    const [selectedLocation, setSelectedLocation] = useState('null');
+    const [originLocation, setOriginLocation] = useState('null');
+    const [destinationLocation, setDestinationLocation] = useState('null');
 
     const handleFilterChange = (filterName, value) => {
         setFilters({ ...filters, [filterName]: value });
-        if (filterName === 'location') {
-            setSelectedLocation(value);
-        } else if (filterName === 'status') {
-            setSelectedStatus(value);
+        if (filterName === 'origin') {
+            setOriginLocation(value);
+        } else if (filterName === 'destination') {
+            setDestinationLocation(value);
         }
     };
+
+    
 
     const refs = Array(trains.length).fill(0)
         .map(_ => React.createRef())
@@ -60,24 +63,24 @@ const Sidebar = ({
             {/* Location Filter */}
             <div>
                 <h3>Trains from </h3>
-                <select className={"secondary-bg"} onChange={(e) => handleFilterChange('location', e.target.value)}>
+                <select value = {originLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('origin', e.target.value)}>
                     <option value="">----/----</option>
-                    {uniqueLocations.map(originLocation => (
-                        <option key={originLocation} value={originLocation}>{originLocation}</option>
+                    {uniqueLocations.map(L => (
+                        <option key={L} value={L}>{L}</option>
                     ))}
                 </select>
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('origin', '')}>Clear Location Filter</button>
 
             </div>
             <div>
                 <h3>Trains to </h3>
-                <select className={"secondary-bg"} onChange={(e) => handleFilterChange('location', e.target.value)}>
+                <select value={destinationLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('destination', e.target.value)}>
                     <option value="">----/----</option>
-                    {uniqueLocations.map(destinationLocation => (
-                        <option key={destinationLocation} value={destinationLocation}>{destinationLocation}</option>
+                    {uniqueLocations.map(L => (
+                        <option key={L} value={L}>{L}</option>
                     ))}
                 </select>
-
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Location Filter</button>
                 <h3></h3>
             </div>
 
