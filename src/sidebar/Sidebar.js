@@ -67,7 +67,7 @@ const Sidebar = ({
             <div>
                 <h3>Trains from  
                 <select value = {originLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('origin', e.target.value)}>
-                    <option value="">----/----</option>
+                    <option value="">Any</option>
                     {uniqueLocations.map(L1 => (
                         <option key={L1} value={L1}>{L1}</option>
                     ))}
@@ -79,7 +79,7 @@ const Sidebar = ({
             <div style={{marginBottom: '16px'}}>
                 <h3>Trains to 
                 <select value={destinationLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('destination', e.target.value)}>
-                    <option value="">----/----</option>
+                    <option value="">Any</option>
                     {uniqueLocations.map(L => (
                         <option key={L} value={L}>{L}</option>
                     ))}
@@ -89,7 +89,7 @@ const Sidebar = ({
                 <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Location Filter</button>
             </div>
             <div className={'trains-container'}>
-                {loading && <Skeleton count={5} height={162} style={{marginBottom: 10}}/>}
+                {loading && <Skeleton count={5} height={162} borderRadius={8} style={{marginBottom: 10}}/>}
                 {/* Trains */}
                 {filteredTrains && filteredTrains.length === 0 && <div className={'no-trains'}>There are currently no trains on this route</div>}
                 {filteredTrains && filteredTrains.map((train, index) => (
@@ -106,7 +106,7 @@ const Sidebar = ({
                                 `${formatTime(train.scheduledDeparture)} - ${formatTime(train.scheduledArrival)}`
                                 :
                                 'Train schedule not available'} 
-                                {train.isLate && <span className={"pl-2"}> Delay time: {train.delayInMinutes} minute(s)</span>}
+                                {train.isLate && <span className={"late-text"}> Delay time: {train.delayInMinutes} minute(s)</span>}
                         </h4>
                         <span className="card-status-indicator" style={{ backgroundColor: train.isLate ? colors.late : colors.onTime}}>
                             {train.isLate ? "Late" : "On Time"}

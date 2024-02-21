@@ -6,7 +6,6 @@ export default function ErrorToast({error}) {
     const notify = (e) => toast.error(`An error occurred: ${e.message}`);
 
     useEffect(() => {
-        console.log(error)
         if (error)
             notify(error)
     }, [error])
