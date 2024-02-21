@@ -110,7 +110,7 @@ export async function getTrainsWithMovement(trains) {
         const trainsWithMovement = [];
         for (let i = 0; i < trains.length; i++) {
             const {movement, schedule} = data[i];
-            const {stations} = getStationsAndRoutes(movement, schedule);
+            const {routes, stations} = getStationsAndRoutes(movement, schedule);
 
             const train = trains[i];
             const actualArrival = new Date(train.actualArrival);
@@ -124,6 +124,7 @@ export async function getTrainsWithMovement(trains) {
 
             trainsWithMovement.push({
                 ...train,
+                routes,
                 stations,
                 movement: filteredMovement[filteredMovement.length - 1],
                 isLate,
