@@ -3,7 +3,7 @@ import {formatTime} from "../utils/formatters";
 import ExpandSideBar from "./ExpandSidebar";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
-
+import {colors} from "../map/Map";
 
 const Sidebar = ({
                           trains,
@@ -103,9 +103,12 @@ const Sidebar = ({
                             {train.scheduledDeparture && train.scheduledArrival ?
                                 `${formatTime(train.scheduledDeparture)} - ${formatTime(train.scheduledArrival)}`
                                 :
-                                'Train schedule not available'}
+                                'Train schedule not available'} 
+                                {train.isLate && <span className={"pl-2"}> Delay time: {train.delayInMinutes} minute(s)</span>}
                         </h4>
-                        <p>Status: {train.lastReportedType}</p>
+                        <span className="card-status-indicator" style={{ backgroundColor: train.isLate ? colors.late : colors.onTime}}>
+                            {train.isLate ? "Late" : "On Time"}
+                            </span>
                         {selectedTrain && selectedTrain.trainId === train.trainId && <ExpandSideBar selectedTrain={selectedTrain}/>}
                         {/* Add more information about the train if needed */}
                     </div>
