@@ -65,31 +65,33 @@ const Sidebar = ({
 
             {/* Location Filter */}
             <div>
-                <h3>Trains from </h3>
+                <h3>Trains from  
                 <select value = {originLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('origin', e.target.value)}>
                     <option value="">----/----</option>
                     {uniqueLocations.map(L1 => (
                         <option key={L1} value={L1}>{L1}</option>
                     ))}
                 </select>
+                </h3>
                 <button className={"secondary-bg"} onClick={() => handleFilterChange('origin', '')}>Clear Location Filter</button>
 
             </div>
             <div style={{marginBottom: '16px'}}>
-                <h3>Trains to </h3>
+                <h3>Trains to 
                 <select value={destinationLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('destination', e.target.value)}>
                     <option value="">----/----</option>
                     {uniqueLocations.map(L => (
                         <option key={L} value={L}>{L}</option>
                     ))}
                 </select>
+                </h3>
 
                 <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Location Filter</button>
             </div>
             <div className={'trains-container'}>
                 {loading && <Skeleton count={5} height={162} style={{marginBottom: 10}}/>}
                 {/* Trains */}
-                {filteredTrains && filteredTrains.length === 0 && <div>No trains</div>}
+                {filteredTrains && filteredTrains.length === 0 && <div className={'no-trains'}>There are currently no trains on this route</div>}
                 {filteredTrains && filteredTrains.map((train, index) => (
                     <div
                         key={train.trainId}
