@@ -36,6 +36,15 @@ function convertTimestampToTime(timestamp) {
     return hours + ":" + minutes;
 }
 
+function isTimePassed(inputTime) {
+    let now = new Date();
+    let currentHours = now.getHours();
+    let currentMinutes = now.getMinutes();
+    let inputHours = Math.floor(inputTime / 100);
+    let inputMinutes = inputTime % 100;
+    return (currentHours > inputHours || (currentHours === inputHours && currentMinutes >= inputMinutes));
+}
+
 export const formatStation = (station) => {
     const currentDate = new Date();
 
@@ -51,7 +60,7 @@ export const formatStation = (station) => {
 
     if (station.pass) {
         const time = convertTime(station.pass);
-        isPass = true;
+        isPass = isTimePassed(station.pass);
         pass = {
             planned: time,
             actual: time,
