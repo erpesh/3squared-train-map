@@ -65,28 +65,28 @@ const Sidebar = ({
 
             {/* Location Filter */}
             <div>
-                <h3>Trains from  
+                <h3>Trains from </h3> 
                 <select value = {originLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('origin', e.target.value)}>
                     <option value="">Any</option>
                     {uniqueLocations.map(L1 => (
                         <option key={L1} value={L1}>{L1}</option>
                     ))}
                 </select>
-                </h3>
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('origin', '')}>Clear Location Filter</button>
+        
+                
 
             </div>
             <div style={{marginBottom: '16px'}}>
-                <h3>Trains to 
+                <h3>Trains to </h3>
                 <select value={destinationLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('destination', e.target.value)}>
                     <option value="">Any</option>
                     {uniqueLocations.map(L => (
                         <option key={L} value={L}>{L}</option>
                     ))}
                 </select>
-                </h3>
+            
 
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Location Filter</button>
+                
             </div>
             <div className={'trains-container'}>
                 {loading && <Skeleton count={5} height={162} borderRadius={8} style={{marginBottom: 10}}/>}
