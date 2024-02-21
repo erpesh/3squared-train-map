@@ -1,5 +1,5 @@
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
 import './App.css';
 import Map from './map/Map';
 import Refresh from './Refresh';

@@ -22,7 +22,11 @@ const TrainJourney = ({selectedTrain}) => {
                                             fill={station.isPass ? "black" : "white"}
                                             padding={10}
                                         />}
-                                {index !== selectedTrain.stations.length - 1 && <MoreVertical size={30} padding={0}/>}
+                                {index !== selectedTrain.stations.length - 1 && <MoreVertical
+                                    size={30}
+                                    color={station.statusColor ?? "black"}
+                                    padding={0}
+                                />}
                             </div>
                             <div className={'station-card'}>
                                 <p>{station.location} ({station.tiploc})</p>

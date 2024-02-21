@@ -29,7 +29,7 @@ export const fetchTrains = async (date = null) => {
                     index === self.findIndex((t) => (
                         t.trainId === obj.trainId
                     ))
-            );
+            )
         console.log(filteredTrainData);
         return filteredTrainData;
     }

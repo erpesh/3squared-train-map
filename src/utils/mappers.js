@@ -108,11 +108,12 @@ export async function getTrainsWithMovement(trains) {
         const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
 
         const isLate = delayInMilliseconds > 0;
+        const filteredMovement = movement.filter(m => m.latLong);
 
         trainsWithMovement.push({
             ...train,
             stations,
-            movement: movement[movement.length - 1],
+            movement: filteredMovement[filteredMovement.length - 1],
             isLate,
             delayInMinutes
         })
