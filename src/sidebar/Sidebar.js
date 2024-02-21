@@ -84,7 +84,7 @@ const Sidebar = ({
                     ))}
                 </select>
 
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Status Filter</button>
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Location Filter</button>
             </div>
             <div className={'trains-container'}>
                 {loading && <Skeleton count={5} height={162} style={{marginBottom: 10}}/>}
