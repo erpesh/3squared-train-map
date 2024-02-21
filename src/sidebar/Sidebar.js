@@ -60,7 +60,7 @@ const Sidebar = ({
             {/* Location Filter */}
             <div>
                 <h3>Trains from </h3>
-                <select onChange={(e) => handleFilterChange('location', e.target.value)}>
+                <select className={"secondary-bg"} onChange={(e) => handleFilterChange('location', e.target.value)}>
                     <option value="">----/----</option>
                     {uniqueLocations.map(originLocation => (
                         <option key={originLocation} value={originLocation}>{originLocation}</option>
@@ -70,7 +70,7 @@ const Sidebar = ({
             </div>
             <div>
                 <h3>Trains to </h3>
-                <select onChange={(e) => handleFilterChange('location', e.target.value)}>
+                <select className={"secondary-bg"} onChange={(e) => handleFilterChange('location', e.target.value)}>
                     <option value="">----/----</option>
                     {uniqueLocations.map(destinationLocation => (
                         <option key={destinationLocation} value={destinationLocation}>{destinationLocation}</option>
