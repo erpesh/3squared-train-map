@@ -185,7 +185,7 @@ button {
   cursor: pointer;
   display: inline-block;
   font-family: -apple-system,system-ui,"Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 18px;
   padding: 4px 12px;
@@ -216,7 +216,7 @@ select {
   cursor: pointer;
   display: inline-block;
   font-family: "Segoe UI",Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji";
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 18px;
   padding: 4px 12px;
