@@ -49,6 +49,17 @@ export const formatStation = (station) => {
     let departure = null;
     let arrival = null;
 
+    if (station.pass) {
+        const time = convertTime(station.pass);
+        isPass = true;
+        pass = {
+            planned: time,
+            actual: time,
+            delayInMinutes: 0,
+            statusColor: colors.onTime
+        }
+    }
+
     if (station.plannedDeparture && station.actualDeparture) {
         const plannedDeparture = new Date(station.plannedDeparture);
         const actualDeparture = new Date(station.actualDeparture);

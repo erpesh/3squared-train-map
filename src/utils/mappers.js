@@ -14,16 +14,19 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
     const routeSegments = [];
     const stationsList = [];
 
+    const movementList = movementData.filter(m => m.latLong);
+    const scheduleList = scheduleData.filter(s => s.latLong);
+
     // Add first station
     const firstSchedule = {
-        ...scheduleData[0],
+        ...scheduleList[0],
         eventType: "ARRIVAL"
     };
     stationsList.push(formatStation(firstSchedule));
-    console.log(scheduleData);
-    for (let i = 0; i < scheduleData.length - 1; i++) {
-        const currentSchedule = scheduleData[i];
-        const nextSchedule = scheduleData[i + 1];
+
+    for (let i = 0; i < scheduleList.length - 1; i++) {
+        const currentSchedule = scheduleList[i];
+        const nextSchedule = scheduleList[i + 1];
 
         const curLatLong = currentSchedule.latLong;
         const nextlatLong = nextSchedule.latLong;
@@ -32,11 +35,11 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
 
         let color = colors.scheduled;
         let station = currentSchedule;
-        const movementIndex = movementData.findIndex(mov => mov.tiploc === nextSchedule.tiploc);
+        const movementIndex = movementList.findIndex(mov => mov.tiploc === nextSchedule.tiploc);
 
         // If movement data for nextSchedule exists
         if (movementIndex !== -1) {
-            const movement = movementData[movementIndex];
+            const movement = movementList[movementIndex];
             const plannedDep = movement.plannedDeparture ?? movement.planned;
             const actualDep = movement.actualDeparture ?? movement.actual;
 
@@ -65,7 +68,7 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
     }
     // Add last station
     const lastSchedule = {
-        ...scheduleData[scheduleData.length - 1],
+        ...scheduleList[scheduleList.length - 1],
         eventType: "ARRIVAL"
     };
     stationsList.push(formatStation(lastSchedule));

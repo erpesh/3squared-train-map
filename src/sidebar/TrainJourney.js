@@ -1,5 +1,5 @@
 import React from "react";
-import {Circle, Clock, Flag, Goal, MoreVertical} from "lucide-react";
+import {Circle, Flag, Goal, MoreVertical} from "lucide-react";
 
 const TrainJourney = ({selectedTrain}) => {
     return (
