@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {formatTime} from "../utils/formatters";
 import ExpandSideBar from "./ExpandSidebar";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 
 const Sidebar = ({
@@ -9,7 +11,8 @@ const Sidebar = ({
                           filters,
                           setFilters,
                           selectedTrain,
-                          onTrainSelect
+                          onTrainSelect,
+                          loading
                       }) => {
     // Extracting unique dates, locations, and statuses from trains
     const uniqueDates = [...new Set(trains.map(train => train.date))];
@@ -28,7 +31,7 @@ const Sidebar = ({
         }
     };
 
-    
+
 
     const refs = Array(trains.length).fill(0)
         .map(_ => React.createRef())
@@ -72,7 +75,7 @@ const Sidebar = ({
                 <button className={"secondary-bg"} onClick={() => handleFilterChange('origin', '')}>Clear Location Filter</button>
 
             </div>
-            <div>
+            <div style={{marginBottom: '16px'}}>
                 <h3>Trains to </h3>
                 <select value={destinationLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('destination', e.target.value)}>
                     <option value="">----/----</option>
@@ -80,31 +83,34 @@ const Sidebar = ({
                         <option key={L} value={L}>{L}</option>
                     ))}
                 </select>
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Location Filter</button>
-                <h3></h3>
-            </div>
 
-            {/* Trains */}
-            {filteredTrains.map((train, index) => (
-                <div
-                    key={train.trainId}
-                    ref={refs[index]}
-                    className={`train-card ${selectedTrain === train ? 'selected' : ''}`}
-                    onClick={() => onTrainSelect(train)}
-                    style={{textAlign: 'left'}}
-                >
-                    <h3>{train.originLocation} to {train.destinationLocation}</h3>
-                    <h4>
-                        {train.scheduledDeparture && train.scheduledArrival ?
-                            `${formatTime(train.scheduledDeparture)} - ${formatTime(train.scheduledArrival)}`
-                            :
-                            'Train schedule not available'}
-                    </h4>
-                    <p>Status: {train.lastReportedType}</p>
-                    {selectedTrain && selectedTrain.trainId === train.trainId && <ExpandSideBar selectedTrain={selectedTrain}/>}
-                    {/* Add more information about the train if needed */}
-                </div>
-            ))}
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
+            </div>
+            <div className={'trains-container'}>
+                {loading && <Skeleton count={5} height={162} style={{marginBottom: 10}}/>}
+                {/* Trains */}
+                {filteredTrains && filteredTrains.length === 0 && <div>No trains</div>}
+                {filteredTrains && filteredTrains.map((train, index) => (
+                    <div
+                        key={train.trainId}
+                        ref={refs[index]}
+                        className={`train-card ${selectedTrain === train ? 'selected' : ''}`}
+                        onClick={() => onTrainSelect(train)}
+                        style={{textAlign: 'left'}}
+                    >
+                        <h3>{train.originLocation} to {train.destinationLocation}</h3>
+                        <h4>
+                            {train.scheduledDeparture && train.scheduledArrival ?
+                                `${formatTime(train.scheduledDeparture)} - ${formatTime(train.scheduledArrival)}`
+                                :
+                                'Train schedule not available'}
+                        </h4>
+                        <p>Status: {train.lastReportedType}</p>
+                        {selectedTrain && selectedTrain.trainId === train.trainId && <ExpandSideBar selectedTrain={selectedTrain}/>}
+                        {/* Add more information about the train if needed */}
+                    </div>
+                ))}
+            </div>
         </div>
     );
 };

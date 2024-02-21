@@ -1,8 +1,13 @@
+.trains-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .train-card {
   background-color: #ffffff;
   border-radius: 8px;
   padding: 10px;
-  margin-bottom: 10px;
   cursor: pointer;
 }
 
@@ -23,7 +28,6 @@
 .train-card {
   padding: 10px;
   border: 1px solid #ccc;
-  margin-bottom: 10px;
 }
 
 .train-info {
@@ -282,4 +286,62 @@ option {
 }
 .station-card-times {
   font-size: 12px;
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+}
+
+.spinner span {
+  font-size: 2rem;
+  animation: fade 1s linear 0s infinite;
+  padding-right: 1rem;
+}
+
+.half-spinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid #63cfd6;
+  border-top: 3px solid transparent;
+  border-radius: 50%;
+  animation: spin 0.5s linear 0s infinite;
+}
+
+.completed {
+  font-size: 2rem;
+  color: #63cfd6;
+
+  animation: bigger 1s linear;
+}
+
+@keyframes bigger {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(2);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
