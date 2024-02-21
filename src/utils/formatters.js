@@ -46,103 +46,100 @@ function isTimePassed(inputTime) {
 }
 
 export const formatStation = (station) => {
-    const currentDate = new Date();
+    try {
+        const currentDate = new Date();
 
-    let status = null;
-    let time = null;
-    let delayedTime = null;
-    let delay = 0;
-    let isPass = false;
-    let statusColor = null;
-    let pass = null;
-    let departure = null;
-    let arrival = null;
+        let status = null;
+        let time = null;
+        let delayedTime = null;
+        let delay = 0;
+        let isPass = false;
+        let statusColor = null;
+        let pass = null;
+        let departure = null;
+        let arrival = null;
 
-    if (station.pass) {
-        const time = convertTime(station.pass);
-        isPass = isTimePassed(station.pass);
-        pass = {
-            planned: time,
-            actual: time,
-            delayInMinutes: 0,
-            statusColor: colors.onTime
+        if (station.pass) {
+            const time = convertTime(station.pass);
+            isPass = isTimePassed(station.pass);
+            pass = {
+                planned: time,
+                actual: time,
+                delayInMinutes: 0,
+                statusColor: colors.onTime
+            }
+        }
+
+        if (station.plannedDeparture && station.actualDeparture) {
+            const plannedDeparture = new Date(station.plannedDeparture);
+            const actualDeparture = new Date(station.actualDeparture);
+
+            const delayInMilliseconds = actualDeparture - plannedDeparture;
+            const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
+            status = delayInMilliseconds === 0 ? "On Time" : delayInMilliseconds > 0 ? "Late" : "Early";
+            statusColor = status === "Late" ? colors.late : status === "Early" ? colors.early : colors.onTime;
+
+            time = convertTimestampToTime(station.plannedDeparture);
+            delayedTime = convertTimestampToTime(station.actualDeparture);
+            isPass = actualDeparture - currentDate < 0;
+
+            departure = {
+                planned: time,
+                actual: delayedTime,
+                delayInMinutes,
+                statusColor
+            }
+        }
+
+        if (station.plannedArrival && station.actualArrival) {
+            const plannedArrival = new Date(station.plannedArrival);
+            const actualArrival = new Date(station.actualArrival);
+
+            const delayInMilliseconds = actualArrival - plannedArrival;
+            const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
+            status = delayInMilliseconds === 0 ? "On Time" : delayInMilliseconds > 0 ? "Late" : "Early";
+            statusColor = status === "Late" ? colors.late : status === "Early" ? colors.early : colors.onTime;
+
+            isPass = actualArrival - currentDate < 0;
+
+            arrival = {
+                planned: convertTimestampToTime(station.plannedArrival),
+                actual: convertTimestampToTime(station.actualArrival),
+                delayInMinutes,
+                statusColor
+            }
+        }
+
+        if (station.plannedDeparture && station.actualDeparture &&
+            station.plannedArrival && station.actualArrival &&
+            station.plannedArrival === station.plannedDeparture &&
+            station.actualArrival === station.actualDeparture
+        ) {
+            pass = departure;
+        }
+
+        return {
+            ...station,
+            isPass,
+            eventType: station.eventType,
+            location: station.location,
+            tiploc: station.tiploc,
+            position: {
+                lat: station.latLong.latitude,
+                lng: station.latLong.longitude,
+            },
+            arrival,
+            statusColor,
+            status,
+            time,
+            delayedTime,
+            delay,
+            pass,
+            departure
         }
     }
-
-    if (station.plannedDeparture && station.actualDeparture) {
-        const plannedDeparture = new Date(station.plannedDeparture);
-        const actualDeparture = new Date(station.actualDeparture);
-
-        const delayInMilliseconds = actualDeparture - plannedDeparture;
-        const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
-        status = delayInMilliseconds === 0 ? "On Time" : delayInMilliseconds > 0 ? "Late" : "Early";
-        statusColor = status === "Late" ? colors.late : status === "Early" ? colors.early : colors.onTime;
-
-        time = convertTimestampToTime(station.plannedDeparture);
-        delayedTime = convertTimestampToTime(station.actualDeparture);
-        isPass = actualDeparture - currentDate < 0;
-
-        departure = {
-            planned: time,
-            actual: delayedTime,
-            delayInMinutes,
-            statusColor
-        }
-    }
-
-    if (station.plannedArrival && station.actualArrival) {
-        const plannedArrival = new Date(station.plannedArrival);
-        const actualArrival = new Date(station.actualArrival);
-
-        const delayInMilliseconds = actualArrival - plannedArrival;
-        const delayInMinutes = Math.floor(delayInMilliseconds / 1000 / 60);
-        status = delayInMilliseconds === 0 ? "On Time" : delayInMilliseconds > 0 ? "Late" : "Early";
-        statusColor = status === "Late" ? colors.late : status === "Early" ? colors.early : colors.onTime;
-
-        isPass = actualArrival - currentDate < 0;
-
-        arrival = {
-            planned: convertTimestampToTime(station.plannedArrival),
-            actual: convertTimestampToTime(station.actualArrival),
-            delayInMinutes,
-            statusColor
-        }
-    }
-
-    if (station.plannedDeparture && station.actualDeparture &&
-        station.plannedArrival && station.actualArrival &&
-        station.plannedArrival === station.plannedDeparture &&
-        station.actualArrival === station.actualDeparture
-    ) {
-        pass = departure;
-    }
-
-    // if (station.pass) {
-    //     status = "On Time";
-    //     time = convertTime(station.pass);
-    // }
-    // else if (station.departure) {
-    //     status = "On Time";
-    //     time = convertTime(station.departure)
-    // }
-
-    return {
-        ...station,
-        isPass,
-        eventType: station.eventType,
-        location: station.location,
-        tiploc: station.tiploc,
-        position: {
-            lat: station.latLong.latitude,
-            lng: station.latLong.longitude,
-        },
-        arrival,
-        statusColor,
-        status,
-        time,
-        delayedTime,
-        delay,
-        pass,
-        departure
+    catch (error) {
+        console.error('Error mapping stations: ', error);
+        throw new Error("Error mapping train stations");
     }
 }
