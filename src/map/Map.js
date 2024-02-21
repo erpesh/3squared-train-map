@@ -18,30 +18,18 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
     const [routeLine, setRouteLine] = useState([]);
     const [stations, setStations] = useState([]);
 
-    const fetchAndDisplayTrainData = async (activationId, scheduleId) => {
-        const scheduleData = await fetchTrainScheduleData(activationId, scheduleId);
-        const movementData = await fetchTrainMovementData(activationId, scheduleId);
-
-        // Remove schedules that don't have latLong value
-        const filteredScheduleData = scheduleData.filter(s => s.latLong);
-
-        displayTrainRoute(movementData, filteredScheduleData);
-    }
-
     useEffect(() => {
         // Clear all markers and routes
         setRouteLine([]);
 
         if (selectedTrain) {
-            fetchAndDisplayTrainData(selectedTrain.activationId, selectedTrain.scheduleId);
+            displayTrainRoute()
         }
     }, [selectedTrain])
 
-    const displayTrainRoute = (movementData, scheduleData) => {
-        const {stations: filteredStations, routes: routeSegments} = getStationsAndRoutes(movementData, scheduleData);
-
-        setRouteLine(routeSegments);
-        setStations(filteredStations);
+    const displayTrainRoute = () => {
+        setRouteLine(selectedTrain.routes);
+        setStations(selectedTrain.stations);
     };
 
     // if (!trains || trains.length === 0) return <div>Error</div>

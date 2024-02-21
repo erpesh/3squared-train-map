@@ -50,7 +50,7 @@ const Sidebar = ({
     }, [selectedTrain])
 
     return (
-        <div style={{ width: '25%', backgroundColor: '#AFEEEE', padding: '10px', overflowY: 'auto', textAlign: 'center' }}>
+        <div className={'sidebar'}>
             <h2>Train Information</h2>
 
             {/* Date Filter *
