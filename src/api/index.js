@@ -30,7 +30,6 @@ export const fetchTrains = async (date = null) => {
                         t.trainId === obj.trainId
                     ))
             )
-        console.log(filteredTrainData);
         return filteredTrainData;
     }
     catch (error) {

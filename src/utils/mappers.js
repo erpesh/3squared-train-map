@@ -20,7 +20,7 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
         eventType: "ARRIVAL"
     };
     stationsList.push(formatStation(firstSchedule));
-
+    console.log(scheduleData);
     for (let i = 0; i < scheduleData.length - 1; i++) {
         const currentSchedule = scheduleData[i];
         const nextSchedule = scheduleData[i + 1];
@@ -72,7 +72,7 @@ export const getStationsAndRoutes = (movementData, scheduleData) => {
 
     // Remove duplicate stations
     const filteredStations = removeDuplicates(stationsList, "tiploc")
-        .filter(station => station.eventType && station.eventType === "ARRIVAL");
+        // .filter(station => station.eventType && station.eventType === "ARRIVAL");
     return {
         stations: filteredStations,
         routes: routeSegments

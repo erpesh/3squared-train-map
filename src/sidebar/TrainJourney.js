@@ -24,7 +24,7 @@ const TrainJourney = ({selectedTrain}) => {
                                         />}
                                 {index !== selectedTrain.stations.length - 1 && <MoreVertical
                                     size={30}
-                                    color={station.statusColor ?? "black"}
+                                    color={selectedTrain.stations[index + 1].statusColor ?? "black"}
                                     padding={0}
                                 />}
                             </div>
