@@ -43,24 +43,24 @@ const TrainJourney = ({selectedTrain}) => {
                                         <span style={{marginLeft: '4px'}}>
                                             Pass:
                                             <span> {station.pass.planned}</span>
-                                            <span style={{ color: station.pass.statusColor, marginLeft: '6px' }}>
+                                            {station.pass.delayInMinutes !== 0 && <span style={{color: station.pass.statusColor, marginLeft: '6px'}}>
                                                 {station.pass.actual}
-                                            </span>
+                                            </span>}
                                         </span>
                                     ) : <>
                                         {station.arrival && <span style={{marginLeft: '4px'}}>
                                             Arrival:
                                             <span> {station.arrival.planned}</span>
-                                            <span style={{ color: station.arrival.statusColor, marginLeft: '6px' }}>
+                                            {station.arrival.delayInMinutes !== 0 && <span style={{color: station.arrival.statusColor, marginLeft: '6px'}}>
                                                 {station.arrival.actual}
-                                            </span>
+                                            </span>}
                                         </span>}
                                         {station.departure && <span style={{marginLeft: '4px'}}>
                                             Departure:
                                             <span> {station.departure.planned}</span>
-                                            <span style={{ color: station.departure.statusColor, marginLeft: '6px' }}>
+                                            {station.departure.delayInMinutes !== 0 && <span style={{color: station.departure.statusColor, marginLeft: '6px'}}>
                                                 {station.departure.actual}
-                                            </span>
+                                            </span>}
                                         </span>}
                                     </>}
                                 </div>
