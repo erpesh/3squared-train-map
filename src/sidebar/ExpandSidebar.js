@@ -11,7 +11,7 @@ const ExpandSideBar = ({selectedTrain}) => {
 
     return (
         <div>
-            <button onClick={handleExpand} className={'primary-bg'}>
+            <button onClick={handleExpand} className={'secondary-bg'}>
                 {expanded ? 'Less Info' : 'More Info'}
             </button>
             {expanded && (
