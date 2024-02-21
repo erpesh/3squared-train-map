@@ -1,4 +1,3 @@
-
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import Map from './map/Map';
@@ -11,19 +10,28 @@ import useFilters from "./hooks/useFilters";
 import Sidebar from "./sidebar/Sidebar";
 import useRefresh from "./hooks/useRefresh";
 import LoadingSpinner from "./LoadingSpinner";
+import {useIsMount} from "./hooks/useIsMount";
+import ErrorToast from "./ErrorToast";
 
 const App = () => {
+    const isMount = useIsMount();
     const [selectedTrain, setSelectedTrain] = useState(null);
     const [trains, setTrains] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(false);
 
     const {filteredTrains, filters, setFilters} = useFilters(trains);
 
     async function getTrains(date= null) {
-        const filteredTrainData = await fetchTrains(date);
-
-        const trainsWithMovement = await getTrainsWithMovement(filteredTrainData);
-        setTrains(trainsWithMovement);
+        try {
+            const filteredTrainData = await fetchTrains(date);
+            const trainsWithMovement = await getTrainsWithMovement(filteredTrainData);
+            setTrains(trainsWithMovement);
+        }
+        catch (e) {
+            console.log(e)
+            setError(e);
+        }
     }
 
     useEffect(() => {
@@ -31,7 +39,12 @@ const App = () => {
             .then(() => setLoading(false))
     }, [])
 
-    const refreshTrains = useRefresh(getTrains);
+    function updateTrains() {
+        if (!isMount) // To prevent double fetch on page load
+            getTrains();
+    }
+
+    const refreshTrains = useRefresh(updateTrains);
 
     return (
         <div style={{ display: 'flex', height: '100vh' }}>
@@ -54,6 +67,7 @@ const App = () => {
                 />}
             </div>
             <Refresh refreshTrains={refreshTrains}/>
+            <ErrorToast error={error}/>
         </div>
         
     );

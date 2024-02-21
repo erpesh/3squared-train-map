@@ -34,7 +34,7 @@ export const fetchTrains = async (date = null) => {
     }
     catch (error) {
         console.error('Error fetching trains: ', error);
-        return null;
+        throw new Error("Error fetching trains.");
     }
 }
 
@@ -44,8 +44,8 @@ export const fetchTrainScheduleData = async (activationId, scheduleId) => {
         const scheduleData = await scheduleResponse.json();
         return scheduleData;
     } catch (error) {
-        console.error('Error fetching train schedule data:', error);
-        return null;
+        console.error('Error fetching schedule: ', error);
+        throw new Error("Error fetching train schedule.");
     }
 };
 
@@ -55,7 +55,7 @@ export const fetchTrainMovementData = async (activationId, scheduleId) => {
         const movementData = await movementResponse.json();
         return movementData;
     } catch (error) {
-        console.error('Error fetching train movement data:', error);
-        return null;
+        console.error('Error fetching movement: ', error);
+        throw new Error("Error fetching train movement.");
     }
 };
