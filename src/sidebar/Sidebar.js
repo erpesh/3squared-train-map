@@ -68,8 +68,8 @@ const Sidebar = ({
                 <h3>Trains from </h3>
                 <select value = {originLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('origin', e.target.value)}>
                     <option value="">----/----</option>
-                    {uniqueLocations.map(L => (
-                        <option key={L} value={L}>{L}</option>
+                    {uniqueLocations.map(L1 => (
+                        <option key={L1} value={L1}>{L1}</option>
                     ))}
                 </select>
                 <button className={"secondary-bg"} onClick={() => handleFilterChange('origin', '')}>Clear Location Filter</button>
@@ -84,7 +84,7 @@ const Sidebar = ({
                     ))}
                 </select>
 
-                <button className={"secondary-bg"} onClick={() => handleFilterChange('status', null)}>Clear Status Filter</button>
+                <button className={"secondary-bg"} onClick={() => handleFilterChange('destination', '')}>Clear Status Filter</button>
             </div>
             <div className={'trains-container'}>
                 {loading && <Skeleton count={5} height={162} style={{marginBottom: 10}}/>}
