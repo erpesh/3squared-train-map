@@ -21,7 +21,7 @@ export default function FadedStations({passedStations, notPassedStations, destin
                 <StationItem
                     key={index}
                     station={station}
-                    nextStation={notPassedStations[index + 1] ?? destination}
+                    nextStation={passedStations[index + 1] ?? destination}
                 />
             ))}
         </>
