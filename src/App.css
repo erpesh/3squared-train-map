@@ -392,6 +392,10 @@ option {
   background-color:rgba(255,255,255,0.5);
 }
 
+.mobile-only {
+  display: none;
+}
+
 @media screen and (max-width: 1140px) {
   .sidebar {
     display: none;
@@ -406,6 +410,9 @@ option {
   }
   .title {
     display: none;
+  }
+  .mobile-only {
+    display: inline-block;
   }
 }
 
