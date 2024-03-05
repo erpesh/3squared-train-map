@@ -100,7 +100,7 @@
   border: 3px solid;
   border-color:#63cfd6;
 }
-.sidebar {
+.sidebar, sidebar-mobile {
   width: calc(25% - 20px);
   background-color: #AFEEEE;
   padding: 10px;
@@ -390,4 +390,56 @@ option {
   border-color:#656569;
   border-radius:10px;
   background-color:rgba(255,255,255,0.5);
+}
+
+@media screen and (max-width: 1140px) {
+  .sidebar {
+    display: none;
+  }
+  .header {
+    width: 100%;
+    padding: 0;
+    flex-direction: row-reverse;
+  }
+  .logo {
+    margin-left: 10px;
+  }
+  .title {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .Refresh {
+    display: none;
+  }
+  .legend-app {
+    display: none;
+  }
+}
+
+/*@media screen and (max-width: 700px) {*/
+/*  .Refresh {*/
+/*    display: none;*/
+/*  }*/
+/*  .legend-app {*/
+/*    display: none;*/
+/*  }*/
+/*  .title {*/
+/*    display: none;*/
+/*  }*/
+/*}*/
+
+.clean-button {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+.drawer {
+  padding: 20px 10px;
 }

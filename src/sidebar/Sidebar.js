@@ -5,16 +5,20 @@ import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import {colors} from "../map/Map";
 import TrainStationSelector from "./TrainStationSelector";
+import {useAppState} from "../AppContext";
 
-const Sidebar = ({
-                          trains,
-                          filteredTrains,
-                          filters,
-                          setFilters,
-                          selectedTrain,
-                          onTrainSelect,
-                          loading
-                      }) => {
+const Sidebar = ({ mobile }) => {
+    const {
+        trains,
+        filteredTrains,
+        filters,
+        setFilters,
+        selectedTrain,
+        setSelectedTrain,
+        loading
+    } = useAppState();
+
+
     const uniqueLocations = [...new Set(trains.map(train => train.originLocation))];
     const [originLocation, setOriginLocation] = useState('null');
     const [destinationLocation, setDestinationLocation] = useState('null');
@@ -47,9 +51,9 @@ const Sidebar = ({
     }, [selectedTrain])
 
     return (
-        <div className={'sidebar'}>
+        <div className={mobile ? 'sidebar-mobile' : 'sidebar'}>
             <h2>Train Information</h2>
-            <TrainStationSelector onSelect={() => console.log('selected')}/>
+            <TrainStationSelector/>
             {/* Location Filter */}
             <div>
                 <h3>Trains from </h3> 
@@ -79,7 +83,7 @@ const Sidebar = ({
                         key={train.trainId}
                         ref={refs[index]}
                         className={`train-card ${selectedTrain === train ? 'selected' : ''}`}
-                        onClick={() => onTrainSelect(train)}
+                        onClick={() => setSelectedTrain(train)}
                         style={{textAlign: 'left'}}
                     >
                         <h3>{train.originLocation} to {train.destinationLocation}</h3>
