@@ -4,6 +4,7 @@ import ExpandSideBar from "./ExpandSidebar";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 import {colors} from "../map/Map";
+import TrainStationSelector from "./TrainStationSelector";
 
 const Sidebar = ({
                           trains,
@@ -14,11 +15,7 @@ const Sidebar = ({
                           onTrainSelect,
                           loading
                       }) => {
-    // Extracting unique dates, locations, and statuses from trains
-    const uniqueDates = [...new Set(trains.map(train => train.date))];
     const uniqueLocations = [...new Set(trains.map(train => train.originLocation))];
-    const uniqueStatuses = [...new Set(trains.map(train => train.lastReportedType))];
-    const [selectedLocation, setSelectedLocation] = useState('null');
     const [originLocation, setOriginLocation] = useState('null');
     const [destinationLocation, setDestinationLocation] = useState('null');
 
@@ -52,17 +49,7 @@ const Sidebar = ({
     return (
         <div className={'sidebar'}>
             <h2>Train Information</h2>
-
-            {/* Date Filter *
-            <div>
-                <h3>Filter by Date:</h3>
-                {uniqueDates.map(date => (
-                    <button key={date} onClick={() => handleFilterChange('date', date)}>{date}</button>
-                ))}
-                <button onClick={() => handleFilterChange('date', null)}>Clear Date Filter</button>
-            </div>
-                */}
-
+            <TrainStationSelector onSelect={() => console.log('selected')}/>
             {/* Location Filter */}
             <div>
                 <h3>Trains from </h3> 
@@ -72,9 +59,6 @@ const Sidebar = ({
                         <option key={L1} value={L1}>{L1}</option>
                     ))}
                 </select>
-        
-                
-
             </div>
             <div style={{marginBottom: '16px'}}>
                 <h3>Trains to </h3>
@@ -84,9 +68,7 @@ const Sidebar = ({
                         <option key={L} value={L}>{L}</option>
                     ))}
                 </select>
-            
 
-                
             </div>
             <div className={'trains-container'}>
                 {loading && <Skeleton count={5} height={162} borderRadius={8} style={{marginBottom: 10}}/>}

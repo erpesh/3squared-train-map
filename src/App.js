@@ -12,6 +12,7 @@ import useRefresh from "./hooks/useRefresh";
 import LoadingSpinner from "./LoadingSpinner";
 import {useIsMount} from "./hooks/useIsMount";
 import ErrorToast from "./ErrorToast";
+import useLocalStorageState from "use-local-storage-state";
 
 const App = () => {
     const isMount = useIsMount();
@@ -20,11 +21,13 @@ const App = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
+    const [selectedStations, setSelectedStations] = useLocalStorageState("selectedStations", {defaultValue: []});
     const {filteredTrains, filters, setFilters} = useFilters(trains);
 
-    async function getTrains(date= null) {
+    async function getTrains() {
         try {
-            const filteredTrainData = await fetchTrains(date);
+            console.log(selectedStations);
+            const filteredTrainData = await fetchTrains(selectedStations.map(i => i.value));
             const trainsWithMovement = await getTrainsWithMovement(filteredTrainData);
             setTrains(trainsWithMovement);
         }
