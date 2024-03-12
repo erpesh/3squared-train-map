@@ -16,11 +16,11 @@ To get started with this project, follow these steps:
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/erpesh/3squared-rail-map.git
+   git clone https://github.com/erpesh/3squared-train-map.git
 
 2. **Navigate to the project directory and install dependencies**:
    ```bash
-   cd 3squared-rail-map
+   cd 3squared-train-map
    npm install
 
 3. **Rename environment file and add your API key**:
