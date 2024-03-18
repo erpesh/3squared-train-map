@@ -12,20 +12,21 @@ The National Rail Network Map is a service which will allow the user to view the
 
 **National Map**
 <br> The National Map features all the live trains within the UK. To find a specific train using the map, you can hover over the train icons to unveil tooltips. The tooltip will provide information regarding the train, including it's ID, Origin, Destination and status.
-![National Map Tooltip](https://i.imgur.com/hLd0dt6.png)
+<img src="https://i.imgur.com/hLd0dt6.png" width="800" height="400">
 
 **Sidebar**
 <br> The sidebar allows the user to search for trains through either their station name/TIPLOC or a drop-down menu. Users are also provided with a dropdown showing all current origin/destination stations. Below the search feature is a list of all trains relating to the search functions. The below image shows the default search filter, which shows every train.
-![Sidebar](https://i.imgur.com/yuxNCYn.png)
-Upon selecting a train, the map will highlight the train and its route, providing information regarding the stations on both the sidebar and map.
-![Selected Train](https://i.imgur.com/kKn8SkK.jpeg)
-Within the more info section on the sidebar, you can click the faded out station name to reveal a list of all passed stations.
-![Stations info](https://i.imgur.com/1uoisN3.png)
+<img src="https://i.imgur.com/yuxNCYn.png" width="200" height="400">
+<br>Upon selecting a train, the map will highlight the train and its route, providing information regarding the stations on both the sidebar and map.
+<br> <img src="https://i.imgur.com/kKn8SkK.jpeg" width="800" height="400">
+<br> Within the more info section on the sidebar, you can click the faded out station name to reveal a list of all passed stations.
+<br> <img src="https://i.imgur.com/1uoisN3.png" width="200" height="400">
+
 
 **Legend**
 <br> The legend is located in the bottom right of the application and is closed by default, so users will have to click the button to open it to read the key. 
-![Legend](https://i.imgur.com/PjorMxa.jpeg)
+<img src="https://i.imgur.com/PjorMxa.jpeg" width="800" height="400">
 
 **Map Updater**
 <br> The Map updater interface is located in the top right of the application. It features a countdown until the map will update, as well as a manual button.
-![Map Updater](https://i.imgur.com/xCNCPlA.png)
+<img src="https://i.imgur.com/xCNCPlA.png" width="800" height="400">
