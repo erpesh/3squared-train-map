@@ -41,7 +41,7 @@ export default function Trains() {
 
     // Set view to the selected train
     useEffect(() => {
-        if (selectedTrain) {
+        if (selectedTrainId) {
             const latLong = selectedTrain.movement.latLong;
             map.setView([latLong.latitude, latLong.longitude])
         }

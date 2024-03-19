@@ -47,6 +47,7 @@ export const AppProvider = ({ children }) => {
         <AppContext.Provider
             value={{
                 selectedTrain,
+                selectedTrainId,
                 setSelectedTrainId,
                 trains,
                 refreshTrains,
