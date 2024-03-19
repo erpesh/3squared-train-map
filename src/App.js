@@ -13,7 +13,6 @@ const App = () => {
     const {
         selectedTrain,
         setSelectedTrainId,
-        refreshTrains,
         filteredTrains,
         loading,
         error
@@ -31,7 +30,7 @@ const App = () => {
                     setSelectedTrainId={setSelectedTrainId}
                 />}
             </div>
-            <Refresh refreshTrains={refreshTrains}/>
+            <Refresh/>
             <ErrorToast error={error}/>
             {/*<SocketComponent/>*/}
         </div>

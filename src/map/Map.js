@@ -1,10 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {MapContainer, TileLayer, ZoomControl, ScaleControl, WMSTileLayer} from 'react-leaflet';
+import {MapContainer, TileLayer, ZoomControl, ScaleControl} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import Stations from "./Stations";
 import Routes from "./Routes";
 import Trains from "./Trains";
-import useLocalStorageState from "use-local-storage-state";
 
 export const colors = {
     onTime: "#305dbd",
