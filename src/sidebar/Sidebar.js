@@ -13,8 +13,9 @@ const Sidebar = ({ mobile }) => {
         filteredTrains,
         filters,
         setFilters,
+        selectedTrainId,
         selectedTrain,
-        setSelectedTrain,
+        setSelectedTrainId,
         loading
     } = useAppState();
 
@@ -46,9 +47,9 @@ const Sidebar = ({ mobile }) => {
     }
 
     useEffect(() => {
-        if (selectedTrain)
+        if (selectedTrainId)
             handleRefScroll(selectedTrain.trainId)
-    }, [selectedTrain])
+    }, [selectedTrainId])
 
     return (
         <div className={mobile ? 'sidebar-mobile' : 'sidebar'}>
@@ -83,7 +84,7 @@ const Sidebar = ({ mobile }) => {
                         key={train.trainId}
                         ref={refs[index]}
                         className={`train-card ${selectedTrain === train ? 'selected' : ''}`}
-                        onClick={() => setSelectedTrain(train)}
+                        onClick={() => setSelectedTrainId(train.trainId)}
                         style={{textAlign: 'left'}}
                     >
                         <h3>{train.originLocation} to {train.destinationLocation}</h3>

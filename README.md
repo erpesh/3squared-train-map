@@ -24,7 +24,7 @@ To get started with this project, follow these steps:
    npm install
 
 3. **Rename environment file and add your API key**:
-    - Rename `env.example` file to `.env`.
+    - Rename `.env.example` file to `.env`.
     - Open `.env` file in a text editor.
     - Add your API key in the format specified in the file. For example:
       ```

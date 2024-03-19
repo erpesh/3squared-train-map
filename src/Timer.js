@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 const Timer = ({ refreshTrains }) => {
-    const defaultDelay = 200;
+    const defaultDelay = 20;
     const [delay, setDelay] = useState(defaultDelay);
 
     useEffect(() => {

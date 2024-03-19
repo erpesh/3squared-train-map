@@ -12,7 +12,7 @@ import {useAppState} from "./AppContext";
 const App = () => {
     const {
         selectedTrain,
-        setSelectedTrain,
+        setSelectedTrainId,
         refreshTrains,
         filteredTrains,
         loading,
@@ -28,11 +28,12 @@ const App = () => {
                 {loading ? <LoadingSpinner/> : <Map
                     trains={filteredTrains}
                     selectedTrain={selectedTrain}
-                    setSelectedTrain={setSelectedTrain}
+                    setSelectedTrainId={setSelectedTrainId}
                 />}
             </div>
             <Refresh refreshTrains={refreshTrains}/>
             <ErrorToast error={error}/>
+            {/*<SocketComponent/>*/}
         </div>
         
     );

@@ -100,12 +100,16 @@
   border: 3px solid;
   border-color:#63cfd6;
 }
-.sidebar, sidebar-mobile {
+.sidebar {
   width: calc(25% - 20px);
   background-color: #AFEEEE;
   padding: 10px;
   overflow-y: auto;
   text-align: center;
+}
+.sidebar-mobile {
+  z-index: 1500;
+  position: relative;
 }
 
 .logo {
@@ -424,18 +428,6 @@ option {
     display: none;
   }
 }
-
-/*@media screen and (max-width: 700px) {*/
-/*  .Refresh {*/
-/*    display: none;*/
-/*  }*/
-/*  .legend-app {*/
-/*    display: none;*/
-/*  }*/
-/*  .title {*/
-/*    display: none;*/
-/*  }*/
-/*}*/
 
 .clean-button {
   background: none;

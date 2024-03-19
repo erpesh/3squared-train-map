@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import {MapContainer, TileLayer, ZoomControl, ScaleControl} from 'react-leaflet';
+import React, {useEffect, useRef, useState} from 'react';
+import {MapContainer, TileLayer, ZoomControl, ScaleControl, WMSTileLayer} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 import Stations from "./Stations";
 import Routes from "./Routes";
 import Trains from "./Trains";
-import {getStationsAndRoutes} from "../utils/mappers";
+import useLocalStorageState from "use-local-storage-state";
 
 export const colors = {
     onTime: "#305dbd",
@@ -14,11 +13,16 @@ export const colors = {
     scheduled: "#a2adaa",
 }
 
-const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
+const Map = ({ trains, selectedTrain }) => {
+    const ref = useRef(null);
     const [routeLine, setRouteLine] = useState([]);
     const [stations, setStations] = useState([]);
+    // const [tileLayer, setTileLayer] = useLocalStorageState("tileLayed", {defaultValue: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"});
 
     useEffect(() => {
+        // if (ref.current)
+        //     ref.current.setUrl("");
+
         // Clear all markers and routes
         setRouteLine([]);
 
@@ -32,8 +36,8 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
         setStations(selectedTrain.stations);
     };
 
-    // if (!trains || trains.length === 0) return <div>Error</div>
-    if (!trains || trains.length === 0) return <div>Loading</div>
+    if (!trains || trains.length === 0) return <div>Error</div>
+    // if (!trains || trains.length === 0) return <div>Loading</div>
 
     return (
         <MapContainer
@@ -43,13 +47,17 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
             style={{ height: '100vh', background: 'ghostwhite' }}
         >
             <TileLayer
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                ref={ref}
+                url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
                 maxZoom={20}
                 attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
+            {/*<WMSTileLayer*/}
+            {/*    url={"http://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png"}*/}
+            {/*/>*/}
 
             {stations && <Stations stations={stations}/>}
-            {trains && trains.length > 0 && <Trains trains={trains} selectedTrain={selectedTrain} setSelectedTrain={setSelectedTrain}/>}
+            {trains && trains.length > 0 && <Trains/>}
             {routeLine && <Routes routeLine={routeLine}/>}
             <ZoomControl position={'bottomleft'}/>
             <ScaleControl position={'bottomright'}/>

@@ -3,6 +3,7 @@ import React, {useEffect} from "react";
 import {Icon} from "leaflet";
 import {Clock} from "lucide-react";
 import {colors} from "./Map";
+import {useAppState} from "../AppContext";
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -15,7 +16,14 @@ const formatDate = (dateString) => {
     return `${formattedHours}:${formattedMinutes}`;
 }
 
-export default function Trains({ trains, selectedTrain, setSelectedTrain }) {
+export default function Trains() {
+    const {
+        trains,
+        selectedTrainId,
+        selectedTrain,
+        setSelectedTrainId,
+    } = useAppState();
+
     const map = useMap();
 
     const getPosition = (latLong) => {
@@ -37,7 +45,7 @@ export default function Trains({ trains, selectedTrain, setSelectedTrain }) {
             const latLong = selectedTrain.movement.latLong;
             map.setView([latLong.latitude, latLong.longitude])
         }
-    }, [selectedTrain])
+    }, [selectedTrainId])
 
     return (
         <>
@@ -48,7 +56,7 @@ export default function Trains({ trains, selectedTrain, setSelectedTrain }) {
                     icon={trainIcon}
                     eventHandlers={{
                         click: () => {
-                            setSelectedTrain(train)
+                            setSelectedTrainId(train.trainId)
                         },
                     }}
                 >
