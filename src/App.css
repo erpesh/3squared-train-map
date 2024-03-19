@@ -1,3 +1,8 @@
+:root {
+  --primary-colour: #63cfd6;
+  --secondary-colour: #656569;
+}
+
 .trains-container {
   display: flex;
   flex-direction: column;
@@ -80,7 +85,7 @@
   background: rgba(105,118,124,0.4);
   border-radius:5%;
   border: 3px solid;
-  border-color:#63cfd6;
+  border-color:var(--primary-colour);
   text-align: center;
   
 }
@@ -98,7 +103,7 @@
   padding:0 20px;
   background-color: rgba(103, 219, 217, 0.7);
   border: 3px solid;
-  border-color:rgba(103, 219, 217, 0.7);
+  border-color:var(--primary-colour);
 }
 
 .sidebar {
@@ -253,14 +258,15 @@ option {
 }
 
 .primary-bg {
-  background-color: #63cfd6;
+  background-color: var(--primary-colour);
+  color: black;
 }
 
 .primary-bg:hover {
   background-color: #5bb1b7;
 }
 .secondary-bg {
-  background-color: #656569;
+  background-color: var(--secondary-colour);
 }
 
 .secondary-bg:hover {
@@ -280,7 +286,7 @@ option {
   background: rgba(103, 219, 217, 0.3);
   border-radius:5%;
   border: 3px solid;
-  border-color:#63cfd6;
+  border-color:var(--primary-colour);
   text-align: center;
   
 }
@@ -332,7 +338,7 @@ option {
 .half-spinner {
   width: 50px;
   height: 50px;
-  border: 3px solid #63cfd6;
+  border: 3px solid var(--primary-colour);
   border-top: 3px solid transparent;
   border-radius: 50%;
   animation: spin 0.5s linear 0s infinite;
@@ -340,7 +346,7 @@ option {
 
 .completed {
   font-size: 2rem;
-  color: #63cfd6;
+  color: var(--primary-colour);
 
   animation: bigger 1s linear;
 }
@@ -386,7 +392,7 @@ option {
   font-size:20px;
   font-weight:600;
   border: 2px solid;
-  border-color:#656569;
+  border-color:var(--secondary-colour);
   border-radius:10px;
   background-color:rgba(255,255,255,0.5);
 }
@@ -438,3 +444,8 @@ option {
   padding: 20px 10px;
 }
 
+.select-label {
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+}

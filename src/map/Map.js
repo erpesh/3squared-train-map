@@ -51,6 +51,13 @@ const Map = ({ trains, selectedTrain }) => {
                 maxZoom={20}
                 attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
             />
+            {/*<TileLayer*/}
+            {/*    ref={ref}*/}
+            {/*    url={"https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.{ext}"}*/}
+            {/*    maxZoom={20}*/}
+            {/*    attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'*/}
+            {/*    ext={'png'}*/}
+            {/*/>*/}
             {/*<WMSTileLayer*/}
             {/*    url={"http://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png"}*/}
             {/*/>*/}
