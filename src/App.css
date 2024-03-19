@@ -103,7 +103,7 @@
   padding:0 20px;
   background-color: rgba(103, 219, 217, 0.7);
   border: 3px solid;
-  border-color:var(--primary-colour);
+  border-color:rgba(103, 219, 217, 0.7);
 }
 
 .sidebar {
