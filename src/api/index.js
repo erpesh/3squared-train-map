@@ -20,7 +20,7 @@ export const fetchTrains = async (stations) => {
 
         let startDate = `${year}-${month}-${day}T00:00:00`;
         let endDate = `${year}-${month}-${day}T23:59:59`;
-
+        
         const trainResponse = await apiRequest(`/trains/tiploc/${stations.join(',')}/${startDate}/${endDate}`);
         const trainData = await trainResponse.json();
         const filteredTrainData = trainData
@@ -31,7 +31,9 @@ export const fetchTrains = async (stations) => {
                         t.trainId === obj.trainId
                     ))
             )
+        console.log(filteredTrainData);
         return filteredTrainData;
+
     }
     catch (error) {
         console.error('Error fetching trains: ', error);
