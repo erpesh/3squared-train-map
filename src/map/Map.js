@@ -35,6 +35,9 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
     // if (!trains || trains.length === 0) return <div>Error</div>
     if (!trains || trains.length === 0) return <div>Loading</div>
 
+    if (!trains || trains.length === 0) return <div>Error</div>
+    // if (!trains || trains.length === 0) return <div>Loading</div>
+
     return (
         <MapContainer
             id = "map"
@@ -53,7 +56,7 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
 
             {stations && <Stations id = "map_stations" stations={stations}/>}
             {trains && trains.length > 0 && <Trains id = "map_trains" trains={trains} selectedTrain={selectedTrain} setSelectedTrain={setSelectedTrain}/>}
-            {routeLine && <Routes id = "map_routes" routeLine={routeLine}/>}
+            {routeLine && <Routes id =  routeLine={routeLine}/>}
             <ZoomControl position={'bottomleft'}/>
             <ScaleControl position={'bottomright'}/>
         </MapContainer>

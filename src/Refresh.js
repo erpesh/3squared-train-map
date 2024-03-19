@@ -1,25 +1,32 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Timer from './Timer'
+import {useAppState} from "./AppContext";
 
-const Refresh = ({ refreshTrains }) => {
-    let time = new Date().toLocaleTimeString();
-    const [currentTime, setCurrentTime] = useState(time);
+const Refresh = () => {
+    const {refreshTrains} = useAppState();
 
-    const updateTime = () => {
-        let time = new Date().toLocaleTimeString();
-        setCurrentTime(time);
-    }
+    const defaultDelay = 20;
+    const [delay, setDelay] = useState(defaultDelay);
 
-    setInterval(updateTime, 1000);
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setDelay(delay - 1);
+        }, 1000);
+
+        if (delay === 0) {
+            clearInterval(timer);
+            refreshTrains();
+            setDelay(defaultDelay);
+        }
+
+        return () => {
+            clearInterval(timer);
+        };
+
+    }, [delay]);
 
     return (
-        <div className="Refresh">
-            <h1>Live time: {currentTime}</h1>
-            <h1>
-                Updates in: <Timer refreshTrains={refreshTrains}/>
-            </h1>
-            <button className={'primary-bg'} onClick={refreshTrains}>Update</button>
-        </div>
+        <></>
     )
 }
 

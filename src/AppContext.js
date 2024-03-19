@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, {createContext, useContext, useState, useEffect, useMemo} from 'react';
 import { fetchTrains } from "./api";
 import { getTrainsWithMovement } from "./utils/mappers";
 import useFilters from "./hooks/useFilters";
@@ -10,12 +10,15 @@ const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
     const isMount = useIsMount();
-    const [selectedTrain, setSelectedTrain] = useState(null);
+    // const [selectedTrain, setSelectedTrain] = useState(null);
+    const [selectedTrainId, setSelectedTrainId] = useState(null);
     const [trains, setTrains] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [selectedStations, setSelectedStations] = useLocalStorageState("selectedStations", {defaultValue: []});
     const { filteredTrains, filters, setFilters } = useFilters(trains);
+
+    const selectedTrain = useMemo(() => trains.find(t => t.trainId === selectedTrainId) ?? null, [selectedTrainId, trains]);
 
     const getTrains = async () => {
         try {
@@ -44,7 +47,7 @@ export const AppProvider = ({ children }) => {
         <AppContext.Provider
             value={{
                 selectedTrain,
-                setSelectedTrain,
+                setSelectedTrainId,
                 trains,
                 refreshTrains,
                 filteredTrains,
