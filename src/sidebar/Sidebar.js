@@ -57,8 +57,8 @@ const Sidebar = ({ mobile }) => {
             <TrainStationSelector/>
             {/* Location Filter */}
             <div>
-                <h3>Trains from </h3> 
-                <select value = {originLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('origin', e.target.value)}>
+                <label id={"trains-from-label"} className={'select-label'}>Trains from </label>
+                <select aria-labelledby={"trains-from-label"} value={originLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('origin', e.target.value)}>
                     <option value="">Any</option>
                     {uniqueLocations.map(L1 => (
                         <option key={L1} value={L1}>{L1}</option>
@@ -66,8 +66,8 @@ const Sidebar = ({ mobile }) => {
                 </select>
             </div>
             <div style={{marginBottom: '16px'}}>
-                <h3>Trains to </h3>
-                <select value={destinationLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('destination', e.target.value)}>
+                <label id={"trains-to-label"} className={'select-label'}>Trains to </label>
+                <select aria-labelledby={"trains-to-label"} aria-label={"Trains to"} value={destinationLocation} className={"secondary-bg"} onChange={(e) => handleFilterChange('destination', e.target.value)}>
                     <option value="">Any</option>
                     {uniqueLocations.map(L => (
                         <option key={L} value={L}>{L}</option>
