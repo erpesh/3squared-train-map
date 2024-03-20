@@ -79,7 +79,7 @@ const Map = () => {
             </>}
             {trainsHidden && selectedTrain && <Train train={selectedTrain}/>}
             {selectedTrain && <button
-                className={'secondary-bg hide-button'}
+                className={'primary-bg hide-button'}
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 onClick={() => setTrainsHidden(!trainsHidden)}
             >
