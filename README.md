@@ -8,7 +8,7 @@ This project aims to create a National Rail Network Map that provides live infor
 - Timing Points: Identify and mark timing points on the map where trains can perform actions: Pass, Arrival, Departure.
 - Arrival and Departure Comparison: Compare actual arrival/departure times with expected times at timing points to determine if the train is behind, on, or ahead of schedule.
 - UI Features: Implement zoom, pan, tooltips, legends, and a legend key for enhanced usability and aesthetics.
-- Live Updates: Allow users to receive live updates of a train's location, with an option for manual trigger updates or automatic refresh.
+- Live Updates: Allow users to receive live updates of a train's location.
 
 ## Installation
 
