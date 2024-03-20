@@ -1,4 +1,4 @@
-import { apiRequest, fetchTrains, fetchTrainScheduleData, fetchTrainMovementData } from './index';
+import { apiRequest, fetchTrains, fetchTrainScheduleData, fetchTrainMovementData } from '../api/index';
 
 describe('API tests', () => {
     test('fetchTrains should return data', async () => {
