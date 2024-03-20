@@ -3,7 +3,6 @@ import {MapContainer, TileLayer, ZoomControl, ScaleControl} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css';
 import Stations from "./Stations";
 import Routes from "./Routes";
-import Trains from "./Trains";
 import {useAppState} from "../AppContext";
 import Train from "./Train";
 
@@ -16,9 +15,7 @@ export const colors = {
 
 const Map = () => {
     const {
-        filters,
         selectedTrain,
-        setSelectedTrainId,
         filteredTrains,
     } = useAppState();
 
@@ -74,7 +71,12 @@ const Map = () => {
 
             {stations && <Stations stations={stations}/>}
             {routeLine && <Routes routeLine={routeLine}/>}
-            {!trainsHidden && filteredTrains && filteredTrains.length > 0 && <Trains/>}
+
+            {!trainsHidden && filteredTrains && filteredTrains.length > 0 && <>
+                {filteredTrains.map(train => (
+                    <Train key={train.trainId} train={train}/>
+                ))}
+            </>}
             {trainsHidden && selectedTrain && <Train train={selectedTrain}/>}
             {selectedTrain && <button
                 className={'secondary-bg hide-button'}
@@ -82,6 +84,7 @@ const Map = () => {
             >
                 {trainsHidden ? "Show" : "Hide"}
             </button>}
+
             <ZoomControl position={'bottomleft'}/>
             <ScaleControl position={'bottomright'}/>
         </MapContainer>
