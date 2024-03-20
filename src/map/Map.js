@@ -56,7 +56,7 @@ const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
 
             {stations && <Stations id = "map_stations" stations={stations}/>}
             {trains && trains.length > 0 && <Trains id = "map_trains" trains={trains} selectedTrain={selectedTrain} setSelectedTrain={setSelectedTrain}/>}
-            {routeLine && <Routes id =  routeLine={routeLine}/>}
+            {routeLine && <Routes id = "map_routes" routeLine={routeLine}/>}
             <ZoomControl position={'bottomleft'}/>
             <ScaleControl position={'bottomright'}/>
         </MapContainer>
