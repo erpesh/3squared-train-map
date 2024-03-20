@@ -78,8 +78,10 @@ const Map = () => {
             {trainsHidden && selectedTrain && <Train train={selectedTrain}/>}
             {selectedTrain && <button
                 className={'secondary-bg hide-button'}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                 onClick={() => setTrainsHidden(!trainsHidden)}
             >
+                 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Map_icons_by_Scott_de_Jonge_-_train-station.svg/1024px-Map_icons_by_Scott_de_Jonge_-_train-station.svg.png" width={20} height={20} alt="Train Icon" style={{ marginRight: '5px'}} />
                 {trainsHidden ? "Show" : "Hide"}
             </button>}
             <ZoomControl position={'bottomleft'}/>
