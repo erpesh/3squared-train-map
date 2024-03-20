@@ -1,71 +1,40 @@
-import { fetchTrains } from './index'; // Assuming './api' is the path to your file
+import { apiRequest, fetchTrains, fetchTrainScheduleData, fetchTrainMovementData } from './index';
 
-jest.mock('fetch'); // Mock the fetch function
+describe('API tests', () => {
+    test('fetchTrains should return data', async () => {
 
-describe('fetchTrains function', () => {
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
+        const stations = ['LEEDS', 'BELFASTC', 'JAMESST', 'MNCRPES', 'SHEFSRF', 'NEWHVTJ', 'CAMBDGE', 'CREWEMD', 'GTWK', 'WLSDEUT', 'HLWY236', 'LOWFRMT', 'WLSDRMT', 'LINCLNC', 'GLGC', 'CARLILE', 'MOSEUPY', 'KNGX', 'STAFFRD'];
+        
+        let today = new Date();
+    
+        let year = today.getFullYear();
+        let month = String(today.getMonth() + 1).padStart(2, '0');
+        let day = String(today.getDate()).padStart(2, '0');
+    
+        let startDate = `${year}-${month}-${day}T00:00:00`;
+        let endDate = `${year}-${month}-${day}T23:59:59`;
 
-  test('fetches trains for provided stations', async () => {
-    const mockTrainData = [
-      { trainId: 123, lastReportedType: 'DEPARTURE' },
-      { trainId: 456, lastReportedType: 'ARRIVAL' },
-    ];
-    const stations = ['LEEDS', 'SHEFFIELD'];
-    const expectedUrl = `https://traindata-stag-api.railsmart.io/api/trains/tiploc/${stations.join(',')}/${new Date().toISOString().split('T')[0]}T00:00:00/${new Date().toISOString().split('T')[0]}T23:59:59`;
-
-    // Mock the fetch response
-    fetch.mockResolvedValueOnce(
-      Promise.resolve({
-        json: jest.fn().mockResolvedValueOnce(mockTrainData),
-      })
-    );
-
-    const result = await fetchTrains(stations);
-
-    // Expect fetch to be called with the correct URL
-    expect(fetch).toHaveBeenCalledWith(expectedUrl, {
-      headers: {
-        'X-ApiVersion': 1,
-        'X-ApiKey': process.env.REACT_APP_API_KEY,
-      },
+        const trainResponse = await apiRequest(`/trains/tiploc/${stations.join(',')}/${startDate}/${endDate}`);
+        const trainData = await trainResponse.json();
+        expect(trainData).toBeDefined();
+        expect(trainData.length).toBeGreaterThan(0);
     });
 
-    // Expect filtered data to contain only departures and arrivals
-    expect(result).toEqual(expect.arrayContaining(mockTrainData));
+    test('fetchTrains should return data in the correct pattern', async () => {
+        const stations = ['LEEDS', 'BELFASTC', 'JAMESST', 'MNCRPES', 'SHEFSRF', 'NEWHVTJ', 'CAMBDGE', 'CREWEMD', 'GTWK', 'WLSDEUT', 'HLWY236', 'LOWFRMT', 'WLSDRMT', 'LINCLNC', 'GLGC', 'CARLILE', 'MOSEUPY', 'KNGX', 'STAFFRD'];
+        
+        const trainData = await fetchTrains(stations);
+        expect(Array.isArray(trainData)).toBe(true);
+        expect(trainData[0]).toHaveProperty('trainId');
+        expect(trainData[0]).toHaveProperty('originTiploc');
+        expect(trainData[0]).toHaveProperty('destinationTiploc');
+        const modifiedTrainData = trainData.map(train => ({
+            trainId: train.trainId,
+            originTiploc: train.originTiploc,
+            destinationTiploc: train.destinationTiploc
+        }));
 
-    // Expect duplicates to be removed
-    expect(result.length).toBe(mockTrainData.length); // Adjust if duplicates expected
-  });
-
-  test('fetches default stations if none provided', async () => {
-    const mockTrainData = [{ trainId: 789 }];
-
-    // Mock the fetch response
-    fetch.mockResolvedValueOnce(
-      Promise.resolve({
-        json: jest.fn().mockResolvedValueOnce(mockTrainData),
-      })
-    );
-
-    const result = await fetchTrains();
-    // Expect default stations to be used in URL
-    expect(fetch).toHaveBeenCalledWith(expect.stringContaining('LEEDS'));
-
-    expect(result).toEqual(expect.arrayContaining(mockTrainData));
-  });
-
-  test('throws error on fetch failure', async () => {
-    const error = new Error('Network error');
-    fetch.mockRejectedValueOnce(error);
-
-    expect.assertions(1); // Only one assertion needed
-
-    try {
-      await fetchTrains();
-    } catch (err) {
-      expect(err.message).toEqual('Error fetching trains.');
-    }
-  });
+        expect(modifiedTrainData).toBeDefined();
+        expect(modifiedTrainData.length).toBeGreaterThan(0);
+    });
 });

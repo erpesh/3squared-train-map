@@ -45,12 +45,11 @@
       "last 1 safari version"
     ]
   },
-  "jest": {
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest"
-    },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!react-leaflet)"
-    ]
-  }
+  "jest": {   
+    "moduleNameMapper": {
+        "react-leaflet": "<rootDir>/mocks/reactLeafletMock.js"
+    }
+}
+
+  
 }
