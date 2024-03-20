@@ -17,9 +17,9 @@ const Header = () => {
                 alt="Logo" className="logo"/>
             <h1 className="title">National Rail Map</h1>
             <div className={'mobile-only'}>
-                <button onClick={toggleDrawer} className={'clean-button'}>
+                <span onClick={toggleDrawer} style={{marginLeft: 6}} className={'clean-button'}>
                     <AlignJustify/>
-                </button>
+                </span>
                 <Drawer
                     open={isOpen}
                     onClose={toggleDrawer}
@@ -33,9 +33,9 @@ const Header = () => {
                     className={'drawer'}
                     size={'80%'}
                 >
-                    <button className={'clean-button'} onClick={toggleDrawer}>
+                    <span className={'clean-button'} onClick={toggleDrawer}>
                         <XIcon style={{width: 24, height: 24}}/>
-                    </button>
+                    </span>
                     <Sidebar mobile/>
                 </Drawer>
             </div>

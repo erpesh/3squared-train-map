@@ -18,7 +18,7 @@ const formatDate = (dateString) => {
 
 export default function Trains() {
     const {
-        trains,
+        filteredTrains,
         selectedTrainId,
         selectedTrain,
         setSelectedTrainId,
@@ -41,7 +41,7 @@ export default function Trains() {
 
     // Set view to the selected train
     useEffect(() => {
-        if (selectedTrain) {
+        if (selectedTrainId) {
             const latLong = selectedTrain.movement.latLong;
             map.setView([latLong.latitude, latLong.longitude])
         }
@@ -49,7 +49,7 @@ export default function Trains() {
 
     return (
         <>
-            {trains.map(train => (
+            {filteredTrains.map(train => (
                 <Marker
                     key={train.trainId}
                     position={getPosition(train.movement.latLong)}

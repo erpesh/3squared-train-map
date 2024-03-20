@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {MapContainer, TileLayer, ZoomControl, ScaleControl} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import {fetchTrainMovementData, fetchTrainScheduleData} from "../api";
 import Stations from "./Stations";
 import Routes from "./Routes";
 import Trains from "./Trains";
-import {getStationsAndRoutes} from "../utils/mappers";
+import {useAppState} from "../AppContext";
 
 export const colors = {
     onTime: "#305dbd",
@@ -14,49 +13,66 @@ export const colors = {
     scheduled: "#a2adaa",
 }
 
-const Map = ({ trains, selectedTrain, setSelectedTrain }) => {
+const Map = () => {
+    const {
+        filters,
+        selectedTrain,
+        setSelectedTrainId,
+        filteredTrains,
+    } = useAppState();
+
+    const ref = useRef(null);
     const [routeLine, setRouteLine] = useState([]);
     const [stations, setStations] = useState([]);
+    // const [tileLayer, setTileLayer] = useLocalStorageState("tileLayed", {defaultValue: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"});
 
     useEffect(() => {
+        // if (ref.current)
+        //     ref.current.setUrl("");
+
         // Clear all markers and routes
         setRouteLine([]);
 
         if (selectedTrain) {
             displayTrainRoute()
         }
-    }, [selectedTrain])
+    }, [selectedTrain, filteredTrains])
 
     const displayTrainRoute = () => {
         setRouteLine(selectedTrain.routes);
         setStations(selectedTrain.stations);
     };
-    
-    // if (!trains || trains.length === 0) return <div>Error</div>
-    if (!trains || trains.length === 0) return <div>Loading</div>
 
-    if (!trains || trains.length === 0) return <div>Error</div>
+    if (!filteredTrains || filteredTrains.length === 0) return <div>Error</div>
     // if (!trains || trains.length === 0) return <div>Loading</div>
 
     return (
         <MapContainer
-            id = "map"
             zoomControl={false}
             center={[54, -0.5]}
             zoom={6}
             style={{ height: '100vh', background: 'ghostwhite' }}
         >
             <TileLayer
-    
-                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                ref={ref}
+                url={"https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"}
                 maxZoom={20}
                 attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
-        
             />
+            {/*<TileLayer*/}
+            {/*    ref={ref}*/}
+            {/*    url={"https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.{ext}"}*/}
+            {/*    maxZoom={20}*/}
+            {/*    attribution='&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'*/}
+            {/*    ext={'png'}*/}
+            {/*/>*/}
+            {/*<WMSTileLayer*/}
+            {/*    url={"http://{s}.tiles.openrailwaymap.org/standard/{z}/{x}/{y}.png"}*/}
+            {/*/>*/}
 
-            {stations && <Stations id = "map_stations" stations={stations}/>}
-            {trains && trains.length > 0 && <Trains id = "map_trains" trains={trains} selectedTrain={selectedTrain} setSelectedTrain={setSelectedTrain}/>}
-            {routeLine && <Routes id = "map_routes" routeLine={routeLine}/>}
+            {stations && <Stations stations={stations}/>}
+            {filteredTrains && filteredTrains.length > 0 && <Trains/>}
+            {routeLine && <Routes routeLine={routeLine}/>}
             <ZoomControl position={'bottomleft'}/>
             <ScaleControl position={'bottomright'}/>
         </MapContainer>

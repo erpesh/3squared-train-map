@@ -11,9 +11,6 @@ import {useAppState} from "./AppContext";
 
 const App = () => {
     const {
-        selectedTrain,
-        setSelectedTrainId,
-        filteredTrains,
         loading,
         error
     } = useAppState();
@@ -24,11 +21,7 @@ const App = () => {
             <Legend/>
             <Sidebar/>
             <div style={{ flex: 1 }}>
-                {loading ? <LoadingSpinner/> : <Map
-                    trains={filteredTrains}
-                    selectedTrain={selectedTrain}
-                    setSelectedTrainId={setSelectedTrainId}
-                />}
+                {loading ? <LoadingSpinner/> : <Map/>}
             </div>
             <Refresh/>
             <ErrorToast error={error}/>

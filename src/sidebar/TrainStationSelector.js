@@ -9,6 +9,7 @@ const TrainStationSelector = () => {
     return (
         <div style={{ fontFamily: 'Arial, sans-serif' }}>
             <Select
+                aria-label={"Train stations"}
                 defaultValue={selectedStations}
                 onChange={(newValue) => setSelectedStations(newValue)}
                 isMulti
