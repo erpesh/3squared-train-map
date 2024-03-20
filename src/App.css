@@ -449,3 +449,10 @@ option {
   font-weight: 600;
   font-size: 16px;
 }
+
+.hide-button {
+  position: absolute;
+  z-index: 999;
+  top: 35px;
+  left: 5px;
+}

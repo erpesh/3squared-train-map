@@ -5,6 +5,7 @@ import Stations from "./Stations";
 import Routes from "./Routes";
 import Trains from "./Trains";
 import {useAppState} from "../AppContext";
+import Train from "./Train";
 
 export const colors = {
     onTime: "#305dbd",
@@ -24,6 +25,7 @@ const Map = () => {
     const ref = useRef(null);
     const [routeLine, setRouteLine] = useState([]);
     const [stations, setStations] = useState([]);
+    const [trainsHidden, setTrainsHidden] = useState(false);
     // const [tileLayer, setTileLayer] = useLocalStorageState("tileLayed", {defaultValue: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"});
 
     useEffect(() => {
@@ -36,7 +38,7 @@ const Map = () => {
         if (selectedTrain) {
             displayTrainRoute()
         }
-    }, [selectedTrain, filteredTrains])
+    }, [selectedTrain])
 
     const displayTrainRoute = () => {
         setRouteLine(selectedTrain.routes);
@@ -71,8 +73,15 @@ const Map = () => {
             {/*/>*/}
 
             {stations && <Stations stations={stations}/>}
-            {filteredTrains && filteredTrains.length > 0 && <Trains/>}
             {routeLine && <Routes routeLine={routeLine}/>}
+            {!trainsHidden && filteredTrains && filteredTrains.length > 0 && <Trains/>}
+            {trainsHidden && selectedTrain && <Train train={selectedTrain}/>}
+            {selectedTrain && <button
+                className={'secondary-bg hide-button'}
+                onClick={() => setTrainsHidden(!trainsHidden)}
+            >
+                {trainsHidden ? "Show" : "Hide"}
+            </button>}
             <ZoomControl position={'bottomleft'}/>
             <ScaleControl position={'bottomright'}/>
         </MapContainer>
