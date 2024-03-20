@@ -18,7 +18,7 @@ const formatDate = (dateString) => {
 
 export default function Trains() {
     const {
-        trains,
+        filteredTrains,
         selectedTrainId,
         selectedTrain,
         setSelectedTrainId,
@@ -49,7 +49,7 @@ export default function Trains() {
 
     return (
         <>
-            {trains.map(train => (
+            {filteredTrains.map(train => (
                 <Marker
                     key={train.trainId}
                     position={getPosition(train.movement.latLong)}

@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import Stations from "./Stations";
 import Routes from "./Routes";
 import Trains from "./Trains";
+import {useAppState} from "../AppContext";
 
 export const colors = {
     onTime: "#305dbd",
@@ -12,7 +13,14 @@ export const colors = {
     scheduled: "#a2adaa",
 }
 
-const Map = ({ trains, selectedTrain }) => {
+const Map = () => {
+    const {
+        filters,
+        selectedTrain,
+        setSelectedTrainId,
+        filteredTrains,
+    } = useAppState();
+
     const ref = useRef(null);
     const [routeLine, setRouteLine] = useState([]);
     const [stations, setStations] = useState([]);
@@ -28,14 +36,14 @@ const Map = ({ trains, selectedTrain }) => {
         if (selectedTrain) {
             displayTrainRoute()
         }
-    }, [selectedTrain])
+    }, [selectedTrain, filteredTrains])
 
     const displayTrainRoute = () => {
         setRouteLine(selectedTrain.routes);
         setStations(selectedTrain.stations);
     };
 
-    if (!trains || trains.length === 0) return <div>Error</div>
+    if (!filteredTrains || filteredTrains.length === 0) return <div>Error</div>
     // if (!trains || trains.length === 0) return <div>Loading</div>
 
     return (
@@ -63,7 +71,7 @@ const Map = ({ trains, selectedTrain }) => {
             {/*/>*/}
 
             {stations && <Stations stations={stations}/>}
-            {trains && trains.length > 0 && <Trains/>}
+            {filteredTrains && filteredTrains.length > 0 && <Trains/>}
             {routeLine && <Routes routeLine={routeLine}/>}
             <ZoomControl position={'bottomleft'}/>
             <ScaleControl position={'bottomright'}/>
