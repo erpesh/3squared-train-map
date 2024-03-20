@@ -122,6 +122,10 @@ export async function getTrainsWithMovement(trains) {
             const isLate = delayInMilliseconds > 0;
             const filteredMovement = movement.filter(m => m.latLong);
 
+            // Skip train if no movement objects with latLong value
+            if (filteredMovement.length === 0)
+                continue;
+
             trainsWithMovement.push({
                 ...train,
                 routes,
